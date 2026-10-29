@@ -1,0 +1,1319 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Akshardham Academy Admin Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+/* Akshardham Academy — design tokens (Trust & Authority, brand navy/blue/gold) */
+:root {
+  --navy: #14243A; --navy-2: #1C3150; --blue: #2457C5; --blue-600: #1D47A3; --blue-50: #EEF3FD;
+  --gold: #C5A15B; --gold-50: #FAF5EA;
+  --bg: #F5F7FA; --surface: #FFFFFF; --text: #1B2433; --muted: #5B6576;
+  --border: #E3E8EF; --border-strong: #CBD3DF;
+  --ok: #047857; --ok-50: #ECFDF5; --err: #B42318; --err-50: #FEF3F2; --warn: #B45309; --warn-50: #FFFBEB;
+  --r: 12px; --r-lg: 16px;
+  --sh-1: 0 1px 2px rgba(16,24,40,.05), 0 1px 3px rgba(16,24,40,.07);
+  --sh-2: 0 6px 16px rgba(16,24,40,.08);
+  --sh-3: 0 16px 40px rgba(20,36,58,.18);
+  --ease: cubic-bezier(.2,.8,.2,1); --dur: 200ms;
+  --font-head: 'Lexend', 'Noto Sans Devanagari', system-ui, sans-serif;
+  --font-body: 'Source Sans 3', 'Noto Sans Devanagari', system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 var(--font-body); min-height: 100dvh; }
+h1, h2, h3, h4 { font-family: var(--font-head); line-height: 1.25; margin: 0 0 8px; font-weight: 600; letter-spacing: -.01em; color: var(--navy); }
+h1 { font-size: clamp(22px, 4vw, 28px); } h2 { font-size: 20px; } h3 { font-size: 17px; }
+p { margin: 0 0 12px; }
+a { color: var(--blue); text-underline-offset: 3px; }
+.muted { color: var(--muted); } .small { font-size: 14px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: -999px; top: 8px; background: #fff; padding: 8px 12px; border-radius: 8px; z-index: 100; }
+.skip:focus { left: 8px; }
+:focus-visible { outline: 3px solid rgba(36,87,197,.45); outline-offset: 2px; }
+svg.i { width: 20px; height: 20px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+svg.i.sm { width: 16px; height: 16px; } svg.i.lg { width: 28px; height: 28px; }
+
+/* ---------- header ---------- */
+.top { position: sticky; top: 0; z-index: 20; background: var(--navy); color: #fff; }
+.top-in { max-width: 1240px; margin: 0 auto; padding: 8px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 60px; }
+.brand { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; font: 600 17px var(--font-head); }
+.brand b { color: var(--gold); font-weight: 600; }
+.logo { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, var(--gold), #A9843F); display: grid; place-items: center; color: var(--navy); font-weight: 700; }
+.user { display: flex; align-items: center; gap: 10px; font-size: 15px; }
+.user-name { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 560px) { .user-name { display: none; } }
+.avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--blue-50); color: var(--blue); display: grid; place-items: center; font: 600 14px var(--font-head); flex: none; }
+.avatar.lg { width: 56px; height: 56px; font-size: 20px; }
+.top .avatar { background: rgba(255,255,255,.14); color: #fff; }
+.icon-btn { width: 44px; height: 44px; border-radius: 10px; border: 0; background: transparent; color: inherit; display: grid; place-items: center; cursor: pointer; transition: background var(--dur) var(--ease); }
+.icon-btn:hover { background: rgba(255,255,255,.1); }
+
+main { max-width: 1040px; margin: 0 auto; padding: 24px 16px 72px; }
+
+/* ---------- surfaces ---------- */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 20px; box-shadow: var(--sh-1); margin-bottom: 16px; }
+@media (min-width: 768px) { .card { padding: 24px; } }
+.card.narrow { max-width: 560px; margin: 8px auto 16px; }
+.card-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.card-head h2 { margin: 0; display: flex; align-items: center; gap: 10px; }
+.hero { position: relative; overflow: hidden; background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 60%, #23406A 100%); color: #fff; border-radius: var(--r-lg); padding: 24px; margin-bottom: 16px; box-shadow: var(--sh-2); }
+@media (min-width: 768px) { .hero { padding: 32px; } }
+.hero::after { content: ""; position: absolute; right: -70px; top: -70px; width: 240px; height: 240px; border-radius: 50%; border: 30px solid rgba(197,161,91,.13); pointer-events: none; }
+.hero > * { position: relative; z-index: 1; }
+.hero h1, .hero h2 { color: #fff; } .hero .muted, .hero p { color: #C9D3E3; }
+.eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+.card .eyebrow { color: #8A6A2B; }
+
+/* ---------- buttons ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 18px; border-radius: 10px; border: 1px solid var(--border-strong); background: #fff; color: var(--text); font: 600 15px/1.2 var(--font-body); cursor: pointer; text-decoration: none; transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur), box-shadow var(--dur) var(--ease), transform 120ms var(--ease); touch-action: manipulation; }
+.btn:hover { border-color: var(--blue); color: var(--blue); }
+.btn:active { transform: scale(.98); }
+.btn-primary { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 1px 2px rgba(36,87,197,.3); }
+.btn-primary:hover { background: var(--blue-600); border-color: var(--blue-600); color: #fff; }
+.btn-gold { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+.btn-gold:hover { background: #D6B577; border-color: #D6B577; color: var(--navy); }
+.btn-danger { color: var(--err); border-color: #F4C7C3; }
+.btn-danger:hover { background: var(--err-50); border-color: var(--err); color: var(--err); }
+.btn-sm { min-height: 36px; padding: 6px 12px; font-size: 14px; }
+.btn-block { width: 100%; }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.btn-google { background: #fff; color: #1F1F1F; border-color: #DADCE0; width: 100%; min-height: 52px; font-size: 16px; }
+.btn-google:hover { background: #F8FAFF; color: #1F1F1F; border-color: #BFC5CE; box-shadow: var(--sh-1); }
+.btn-google svg { width: 20px; height: 20px; }
+.link { border: 0; background: none; padding: 0; color: var(--blue); cursor: pointer; font: inherit; text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- forms ---------- */
+.field { margin-bottom: 18px; }
+label, .label { display: block; font-weight: 600; font-size: 15px; margin-bottom: 6px; }
+.req { color: var(--err); }
+.help { font-size: 14px; color: var(--muted); margin-top: 6px; }
+input[type=text], input[type=tel], input[type=email], input[type=number], input[type=search], select, textarea { width: 100%; min-height: 46px; font: 16px var(--font-body); padding: 10px 12px; border: 1px solid var(--border-strong); border-radius: 10px; background: #fff; color: var(--text); transition: border-color var(--dur), box-shadow var(--dur); }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 4px rgba(36,87,197,.14); }
+textarea { min-height: 110px; resize: vertical; }
+.check { display: flex; align-items: flex-start; gap: 10px; font-weight: 500; cursor: pointer; margin: 0; }
+.check input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--blue); flex: none; }
+.grid-2 { display: grid; gap: 0 16px; }
+@media (min-width: 640px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+.form-error { color: var(--err); font-weight: 600; margin: 0 0 12px; }
+.form-error:empty { display: none; }
+
+/* option tiles (registration type + quiz answers) */
+.opt { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 12px; margin: 0 0 8px; cursor: pointer; font-weight: 500; background: #fff; transition: border-color var(--dur), background var(--dur); }
+.opt:hover { border-color: #9DB5EA; background: #FAFCFF; }
+.opt input { width: 20px; height: 20px; accent-color: var(--blue); flex: none; margin: 0; }
+.opt:has(input:checked) { border-color: var(--blue); background: var(--blue-50); }
+.opt:has(input:focus-visible) { outline: 3px solid rgba(36,87,197,.4); outline-offset: 2px; }
+.opt .opt-ico { width: 40px; height: 40px; border-radius: 10px; background: var(--gold-50); color: #8A6A2B; display: grid; place-items: center; flex: none; }
+.opt strong { display: block; } .opt span.small { color: var(--muted); font-weight: 400; }
+.opt-grid { display: grid; gap: 8px; }
+@media (min-width: 640px) { .opt-grid { grid-template-columns: 1fr 1fr; } .opt-grid .opt { margin: 0; } }
+
+/* ---------- badges & progress ---------- */
+.badge { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 99px; background: #EEF1F5; color: var(--muted); white-space: nowrap; }
+.badge svg.i { width: 14px; height: 14px; }
+.b-ok { background: var(--ok-50); color: var(--ok); } .b-blue { background: var(--blue-50); color: var(--blue); }
+.b-err { background: var(--err-50); color: var(--err); } .b-warn { background: var(--warn-50); color: var(--warn); }
+.b-gold { background: var(--gold-50); color: #7A5E22; }
+.hero .badge { background: rgba(255,255,255,.12); color: #fff; }
+.bar { height: 8px; background: #E7ECF3; border-radius: 99px; overflow: hidden; }
+.bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--blue), #4C7BE0); border-radius: inherit; transition: width 500ms var(--ease); }
+.hero .bar { background: rgba(255,255,255,.16); } .hero .bar > i { background: linear-gradient(90deg, var(--gold), #E2C68B); }
+.ring { width: 140px; height: 140px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto; }
+.ring > div { width: 112px; height: 112px; border-radius: 50%; background: #fff; display: grid; place-items: center; font: 700 30px var(--font-head); color: var(--navy); }
+
+/* ---------- selection steps ---------- */
+.steps { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 14px; }
+@media (min-width: 768px) { .steps { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
+.steps li { display: flex; gap: 12px; align-items: flex-start; }
+@media (min-width: 768px) { .steps li { flex-direction: column; } }
+.steps .n { width: 34px; height: 34px; border-radius: 50%; background: rgba(197,161,91,.2); color: var(--gold); display: grid; place-items: center; font: 600 15px var(--font-head); flex: none; }
+.steps strong { display: block; color: #fff; font-size: 15px; } .steps span { font-size: 14px; color: #C9D3E3; }
+
+/* ---------- chapter timeline ---------- */
+.chapters { list-style: none; margin: 0; padding: 0; }
+.chapter { position: relative; display: flex; gap: 14px; padding-bottom: 14px; }
+.chapter:not(:last-child)::before { content: ""; position: absolute; left: 21px; top: 46px; bottom: 2px; width: 2px; background: var(--border); }
+.chapter.passed:not(:last-child)::before { background: var(--ok); }
+.node { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; flex: none; background: #EEF1F5; color: #8792A3; border: 2px solid var(--border); position: relative; z-index: 1; }
+.passed .node { background: var(--ok); border-color: var(--ok); color: #fff; }
+.available .node { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 0 0 6px rgba(36,87,197,.14); }
+.chapter-body { flex: 1; min-width: 0; background: #fff; border: 1px solid var(--border); border-radius: var(--r); padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.available .chapter-body { border-color: #BFD0F3; box-shadow: var(--sh-2); }
+.locked .chapter-body { background: #FAFBFC; }
+.locked h3 { color: var(--muted); }
+.chapter h3 { margin: 0; }
+.chapter-meta { font-size: 14px; color: var(--muted); display: flex; gap: 6px 14px; flex-wrap: wrap; margin-top: 4px; }
+.chapter-meta span { display: inline-flex; align-items: center; gap: 4px; }
+
+/* ---------- lesson ---------- */
+.crumb { display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; text-decoration: none; margin-bottom: 12px; min-height: 44px; }
+.video { position: relative; aspect-ratio: 16 / 9; border-radius: var(--r); overflow: hidden; background: #0B1424; margin: 16px 0; }
+.video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0 16px; }
+
+/* ---------- quiz ---------- */
+.quiz-head { position: sticky; top: 60px; z-index: 5; background: #fff; padding: 12px 0; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+.quiz-head .row { justify-content: space-between; margin-bottom: 8px; font-weight: 600; }
+.q { border: 0; margin: 0 0 24px; padding: 0; min-width: 0; }
+.q legend { font-weight: 600; font-size: 17px; margin-bottom: 12px; padding: 0; display: flex; gap: 10px; }
+.qn { flex: none; width: 28px; height: 28px; border-radius: 8px; background: var(--blue-50); color: var(--blue); display: grid; place-items: center; font: 600 14px var(--font-head); }
+.result { text-align: center; padding: 8px 0; }
+.result h2 { margin-top: 16px; }
+.result .row { justify-content: center; }
+
+/* ---------- notices / empty ---------- */
+.notice { display: flex; gap: 10px; align-items: flex-start; border-radius: 12px; padding: 12px 14px; margin: 12px 0; font-size: 15px; background: var(--warn-50); color: var(--warn); }
+.notice.ok { background: var(--ok-50); color: var(--ok); } .notice.info { background: var(--blue-50); color: var(--blue-600); }
+.hero .notice.ok { background: rgba(4,120,87,.22); color: #D1FAE5; }
+.empty { text-align: center; padding: 32px 16px; color: var(--muted); }
+.empty svg.i { width: 40px; height: 40px; color: #9AA6B8; margin-bottom: 8px; }
+
+/* ---------- auth ---------- */
+.auth { min-height: calc(100dvh - 60px); display: grid; align-items: center; padding: 24px 16px; }
+.auth-grid { max-width: 980px; margin: 0 auto; display: grid; gap: 16px; width: 100%; }
+@media (min-width: 880px) { .auth-grid { grid-template-columns: 1.15fr 1fr; gap: 20px; } }
+.auth .hero, .auth .card { margin: 0; display: flex; flex-direction: column; justify-content: center; }
+@media (min-width: 880px) { .auth .hero, .auth .card { padding: 40px; } }
+.perks { list-style: none; padding: 0; margin: 20px 0 0; display: grid; gap: 14px; }
+.perks li { display: flex; gap: 12px; align-items: flex-start; color: #DCE4F0; }
+.perks svg.i { color: var(--gold); margin-top: 2px; }
+.auth .card .logo { width: 48px; height: 48px; font-size: 22px; margin-bottom: 16px; }
+
+/* ---------- tables ---------- */
+.table-wrap { overflow-x: auto; margin: 0 -20px; }
+@media (min-width: 768px) { .table-wrap { margin: 0 -24px; } }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+th { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); background: #F8FAFC; white-space: nowrap; }
+tbody tr { transition: background var(--dur); } tbody tr:hover { background: #F8FAFD; }
+tbody tr:last-child td { border-bottom: 0; }
+.sub { font-size: 13px; color: var(--muted); }
+.person { display: flex; align-items: center; gap: 10px; min-width: 200px; }
+.person a { font-weight: 600; text-decoration: none; }
+.person a:hover { text-decoration: underline; }
+.num { font-variant-numeric: tabular-nums; }
+.mini-bar { display: flex; align-items: center; gap: 8px; min-width: 130px; } .mini-bar .bar { flex: 1; height: 6px; }
+select.status { min-height: 36px; padding: 4px 8px; font-size: 14px; width: auto; }
+
+/* ---------- admin layout ---------- */
+.admin { max-width: 1240px; margin: 0 auto; }
+@media (min-width: 1024px) { .admin { display: grid; grid-template-columns: 236px 1fr; } }
+.side { padding: 12px 16px 0; }
+@media (min-width: 1024px) { .side { position: sticky; top: 60px; height: calc(100dvh - 60px); padding: 24px 12px; border-right: 1px solid var(--border); background: #fff; } }
+.side nav { display: flex; gap: 6px; overflow-x: auto; }
+@media (min-width: 1024px) { .side nav { flex-direction: column; } }
+.side .label { display: none; font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); padding: 0 12px; margin: 0 0 8px; }
+@media (min-width: 1024px) { .side .label { display: block; } }
+.nav-item { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 8px 12px; border-radius: 10px; color: var(--muted); text-decoration: none; font-weight: 600; white-space: nowrap; transition: background var(--dur), color var(--dur); }
+.nav-item:hover { background: #EEF1F6; color: var(--text); }
+.nav-item.on { background: var(--blue-50); color: var(--blue); }
+.admin main { max-width: none; margin: 0; padding: 20px 16px 72px; min-width: 0; }
+@media (min-width: 1024px) { .admin main { padding: 32px; } }
+.page-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+.page-head h1 { margin: 0 0 4px; } .page-head p { margin: 0; }
+.stats { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); margin-bottom: 16px; }
+@media (min-width: 900px) { .stats { grid-template-columns: repeat(4, 1fr); } }
+.stat { background: #fff; border: 1px solid var(--border); border-radius: var(--r); padding: 16px; box-shadow: var(--sh-1); display: flex; gap: 12px; align-items: center; min-width: 0; }
+.stat .ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--blue-50); color: var(--blue); flex: none; }
+.stat .ico.ok { background: var(--ok-50); color: var(--ok); } .stat .ico.gold { background: var(--gold-50); color: #8A6A2B; }
+.stat .val { font: 700 24px var(--font-head); color: var(--navy); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.stat .lbl { font-size: 13px; color: var(--muted); }
+.toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+.toolbar > * { flex: 1 1 150px; }
+.search { position: relative; flex: 2 1 240px; }
+.search svg.i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+.search input { padding-left: 40px; }
+details.card > summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 10px; font-weight: 600; min-height: 32px; }
+details.card > summary::-webkit-details-marker { display: none; }
+details.card[open] > summary { margin-bottom: 12px; }
+.attempt { border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 8px; }
+.attempt > summary { cursor: pointer; padding: 12px 14px; display: flex; gap: 8px 12px; flex-wrap: wrap; align-items: center; list-style: none; }
+.attempt > summary::-webkit-details-marker { display: none; }
+.attempt-body { padding: 0 14px 14px; border-top: 1px solid var(--border); }
+.qb-item { border: 1px solid var(--border); border-radius: var(--r); padding: 12px 14px; margin-bottom: 8px; display: flex; gap: 12px; justify-content: space-between; align-items: flex-start; }
+.qb-item ol { margin: 6px 0 0; padding-left: 20px; font-size: 15px; list-style: upper-alpha; }
+.ok-t { color: var(--ok); font-weight: 600; } .err-t { color: var(--err); font-weight: 600; }
+code { background: #F1F4F9; padding: 2px 6px; border-radius: 6px; font-size: 14px; word-break: break-word; }
+
+/* ---------- dashboard charts ---------- */
+.chart-grid { display: grid; gap: 0 16px; }
+@media (min-width: 1100px) { .chart-grid { grid-template-columns: 1fr 1fr; } }
+.stat .sub { margin-top: 2px; }
+.seg { display: inline-flex; background: #E9EDF3; border-radius: 10px; padding: 3px; gap: 2px; flex-wrap: wrap; }
+.seg button { border: 0; background: transparent; font: 600 14px var(--font-body); color: var(--muted); padding: 8px 12px; min-height: 38px; border-radius: 8px; cursor: pointer; transition: background var(--dur), color var(--dur); }
+.seg button:hover { color: var(--text); }
+.seg button.on { background: #fff; color: var(--navy); box-shadow: var(--sh-1); }
+.funnel { display: grid; gap: 10px; }
+.f-row { display: grid; grid-template-columns: minmax(96px, 136px) 1fr auto; gap: 12px; align-items: center; padding: 4px 0; border-radius: 8px; cursor: default; }
+.f-lbl { font-size: 14px; color: var(--text); }
+.f-track { height: 20px; }
+.f-track i { display: block; height: 100%; min-width: 2px; background: var(--blue); border-radius: 0 4px 4px 0; transition: width 500ms var(--ease); }
+.f-row:hover .f-track i, .f-row:focus-visible .f-track i { background: var(--blue-600); }
+.f-val { font-weight: 700; min-width: 64px; text-align: right; }
+.cols { display: flex; gap: 8px; height: 180px; }
+.cols-y { display: flex; flex-direction: column; justify-content: space-between; font-size: 12px; color: var(--muted); padding-bottom: 1px; }
+.cols-plot { flex: 1; display: flex; align-items: flex-end; gap: 2px; border-bottom: 1px solid var(--border); background: linear-gradient(var(--border), var(--border)) top / 100% 1px no-repeat; }
+.col { flex: 1; height: 100%; display: flex; align-items: flex-end; justify-content: center; cursor: default; }
+.col i { display: block; width: 100%; max-width: 24px; background: var(--blue); border-radius: 4px 4px 0 0; transition: height 500ms var(--ease); }
+.col:hover i, .col:focus-visible i { background: var(--blue-600); }
+.cols-x { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin: 6px 0 0 28px; }
+.stack { display: flex; gap: 2px; height: 20px; border-radius: 4px; overflow: hidden; }
+.stack i { display: block; min-width: 4px; cursor: default; }
+.legend { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; }
+.legend li { display: flex; align-items: center; gap: 8px; font-size: 15px; }
+.legend b { margin-left: auto; } .legend .sub { min-width: 40px; text-align: right; }
+.sw { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.feed { list-style: none; margin: 0; padding: 0; }
+.feed li { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.feed li:last-child { border-bottom: 0; }
+.feed a { text-decoration: none; } .feed a:hover { text-decoration: underline; }
+#tip { position: absolute; z-index: 60; transform: translate(-50%, -100%); background: var(--navy); color: #fff; font-size: 13px; font-weight: 600; padding: 6px 10px; border-radius: 8px; box-shadow: var(--sh-2); pointer-events: none; opacity: 0; transition: opacity 120ms; white-space: nowrap; }
+#tip.on { opacity: 1; }
+
+/* ---------- learner dashboard ---------- */
+.dash-hero { display: grid; gap: 20px; align-items: center; }
+@media (min-width: 640px) { .dash-hero { grid-template-columns: 1fr auto; } }
+.dash-hero p { margin-bottom: 16px; }
+.hero .ring > div { background: var(--navy-2); color: #fff; }
+.seg a { display: inline-flex; align-items: center; gap: 6px; font: 600 14px var(--font-body); color: var(--muted); padding: 8px 12px; min-height: 38px; border-radius: 8px; text-decoration: none; transition: background var(--dur), color var(--dur); }
+.seg a:hover { color: var(--text); }
+.seg a.on { background: #fff; color: var(--navy); box-shadow: var(--sh-1); }
+.score-track { position: relative; background: #EEF1F5; border-radius: 0 4px 4px 0; }
+.pass-mark { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--navy); border-radius: 1px; }
+.chapters > li.empty { display: block; }
+
+/* ---------- celebrations ---------- */
+.welcome { text-align: center; border-color: #E8D9B5; background: linear-gradient(180deg, var(--gold-50), #fff 70%); }
+.welcome-ico { width: 64px; height: 64px; border-radius: 50%; background: var(--gold); color: var(--navy); display: grid; place-items: center; margin: 0 auto 12px; box-shadow: 0 0 0 8px rgba(197,161,91,.18); }
+.welcome .row { justify-content: center; }
+.welcome ol { text-align: left; max-width: 420px; margin: 12px auto 20px; padding-left: 20px; }
+.confetti { position: fixed; inset: 0; pointer-events: none; z-index: 90; overflow: hidden; }
+.confetti i { position: absolute; top: -14px; width: 8px; height: 12px; border-radius: 2px; animation-name: fall; animation-timing-function: linear; animation-fill-mode: forwards; }
+@keyframes fall { to { transform: translateY(110vh) rotate(600deg); } }
+
+/* ---------- toast / skeleton / motion ---------- */
+#toasts { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 100; display: grid; gap: 8px; width: min(420px, calc(100% - 32px)); }
+.toast { display: flex; gap: 10px; align-items: center; background: var(--navy); color: #fff; padding: 12px 16px; border-radius: 12px; box-shadow: var(--sh-3); font-weight: 500; animation: rise 220ms var(--ease); }
+.toast.err { background: var(--err); }
+.sk { background: linear-gradient(90deg, #E7EBF1 25%, #F2F5F8 50%, #E7EBF1 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite; border-radius: var(--r-lg); }
+@keyframes shimmer { to { background-position: -200% 0; } }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+.fade-in { animation: rise 260ms var(--ease) both; }
+.stagger > * { animation: rise 280ms var(--ease) both; }
+.stagger > *:nth-child(2) { animation-delay: 40ms; } .stagger > *:nth-child(3) { animation-delay: 80ms; }
+.stagger > *:nth-child(4) { animation-delay: 120ms; } .stagger > *:nth-child(5) { animation-delay: 160ms; }
+.stagger > *:nth-child(n+6) { animation-delay: 200ms; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+</style>
+  <meta name="theme-color" content="#14243A">
+</head>
+<body>
+  <div id="app"><header class="top"><div class="top-in"></div></header>
+    <main aria-busy="true"><div class="sk" style="height:96px;margin-bottom:16px"></div><div class="sk" style="height:360px"></div></main></div>
+  <script>window.DEMO_ROLE='admin';
+// DEMO MODE: in-browser stand-in for Supabase. Sample data only; nothing leaves the browser.
+// The RPCs mirror schema.sql: unlock rule, new paper on retry, answer keys never returned to learners.
+(function () {
+  const ROLE = window.DEMO_ROLE || 'learner';
+  let n = 0;
+  const uuid = () => { n++; return ('00000000-0000-4000-8000-' + String(n).padStart(12, '0')); };
+  const now = () => new Date().toISOString();
+  const ago = d => new Date(Date.now() - d * 864e5).toISOString();
+  const clone = o => JSON.parse(JSON.stringify(o));
+
+  // ---------- seed ----------
+  const db = { courses: [], modules: [], questions: [], profiles: [], enrollments: [], attempts: [], employee_invites: [] };
+  const C1 = uuid(), C2 = uuid(), C3 = uuid();
+  db.courses.push(
+    { id: C1, title: 'Sales Executive Foundation', category: 'Sales Executive', audience: 'candidate', description: 'Plot sales basics: customer needs, site visits, closing.', published: true, created_at: ago(30) },
+    { id: C2, title: 'Agent Onboarding', category: 'Channel Partner', audience: 'agent', description: 'How to work with us as a property agent.', published: true, created_at: ago(20) },
+    { id: C3, title: 'Telecaller Script', category: 'Telecaller', audience: 'employee', description: 'Call opening, rapport and next step.', published: true, created_at: ago(10) });
+  const chapters = [
+    ['Company and projects', 'Who we are and the colonies we sell.'],
+    ['Understanding customer needs', 'Budget, location, plot size: asking the right questions.'],
+    ['Running a site visit', 'Before, during and after the visit.'],
+    ['Handling objections', 'Price, timing and trust objections.'],
+    ['Closing and booking', 'Token, documents and booking form.'],
+  ];
+  const QBANK = [
+    ['What should you confirm first with a new customer?', ['Budget and location', 'Their favourite colour', 'Office timings', 'Nothing'], 0],
+    ['A customer says "price is high". Best first step?', ['End the call', 'Understand what they compare it with', 'Offer a discount immediately', 'Argue'], 1],
+    ['When should the next follow-up date be set?', ['Never', 'Next month', 'At the end of every call', 'Only after booking'], 2],
+    ['What is a site visit for?', ['Show the plot and build trust', 'Collect cash only', 'Skip the meeting', 'Nothing'], 0],
+    ['Which detail helps most in rapport?', ['Their village or work', 'The weather only', 'Your salary', 'None'], 0],
+    ['What does "token" mean in a booking?', ['A gift', 'An advance that holds the plot', 'A lottery ticket', 'A discount'], 1],
+  ];
+  const mods = {};
+  chapters.forEach(([t, d], i) => {
+    const id = uuid(); mods[i] = id;
+    db.modules.push({ id, course_id: C1, seq: i + 1, title: t, description: d, videos: 'https://youtu.be/DEMOxVIDEO' + (i + 1), pass_pct: 80, questions_per_test: 3, published: true, created_at: ago(30) });
+    QBANK.forEach(([q, o, c]) => db.questions.push({ id: uuid(), module_id: id, text: q, options: o, correct: c, created_at: ago(30) }));
+  });
+  [C2, C3].forEach(cid => ['Introduction', 'Process', 'Rules'].forEach((t, i) => {
+    const id = uuid(); db.modules.push({ id, course_id: cid, seq: i + 1, title: t, description: '', videos: '', pass_pct: 80, questions_per_test: 3, published: true, created_at: ago(10) });
+    QBANK.forEach(([q, o, c]) => db.questions.push({ id: uuid(), module_id: id, text: q, options: o, correct: c, created_at: ago(10) }));
+  }));
+
+  const ME = uuid(), ADMIN = uuid();
+  const people = [
+    [ME, 'Rahul Verma', '9876500101', 'candidate', 'active', 'rahul.demo@example.com', 4],
+    [uuid(), 'Priya Sharma', '9876500102', 'candidate', 'shortlisted', 'priya.demo@example.com', 0],
+    [uuid(), 'Mohit Jain', '9876500103', 'candidate', 'active', 'mohit.demo@example.com', 2],
+    [uuid(), 'Kavita Meena', '9876500104', 'agent', 'active', 'kavita.demo@example.com', 8],
+    [uuid(), 'Deepak Singh', '9876500105', 'employee', 'active', 'deepak.demo@example.com', 6],
+    [uuid(), 'Anjali Gupta', '9876500106', 'candidate', 'rejected', 'anjali.demo@example.com', 12],
+  ];
+  people.forEach(([id, name, phone, type, status, email, d]) => db.profiles.push({ id, email, full_name: name, phone, user_type: type, role: 'learner', status, notes: '', created_at: ago(d + 3) }));
+  db.profiles.push({ id: ADMIN, email: 'admin.demo@example.com', full_name: 'Demo Admin', phone: '9876500100', user_type: 'employee', role: 'admin', status: 'active', notes: '', created_at: ago(40) });
+  const courseOf = { candidate: C1, agent: C2, employee: C3 };
+  people.forEach(([id, , , type]) => db.enrollments.push({ user_id: id, course_id: courseOf[type], created_at: ago(5) }));
+
+  // past attempts: [user index, module index, passed]
+  const att = (uid, mid, passed, d) => {
+    const qs = db.questions.filter(q => q.module_id === mid).slice(0, 3);
+    const score = passed ? 3 : 1;
+    db.attempts.push({ id: uuid(), user_id: uid, module_id: mid, question_ids: qs.map(q => q.id),
+      detail: qs.map((q, i) => ({ question: q.text, options: q.options, correct: q.correct, chosen: passed || i === 0 ? q.correct : (q.correct + 1) % q.options.length })),
+      score, total: 3, pct: passed ? 100 : 33.33, passed, started_at: ago(d), submitted_at: ago(d) });
+  };
+  att(ME, mods[0], false, 3); att(ME, mods[0], true, 3); att(ME, mods[1], true, 2);
+  const pid = i => people[i][0];
+  [0, 1, 2, 3, 4].forEach(i => att(pid(1), mods[i], true, 1));      // Priya: all clear
+  att(pid(2), mods[0], true, 1); att(pid(2), mods[1], false, 1);     // Mohit
+  att(pid(5), mods[0], false, 6);                                    // Anjali
+  db.employee_invites.push({ email: 'new.employee@example.com', full_name: 'Sanjay Kumar', phone: '9876500107', course_ids: [C3], created_at: ago(1) });
+
+  // ---------- auth ----------
+  let uid = ROLE === 'admin' ? ADMIN : ME;
+  let signedIn = true;
+  const user = () => ({ id: uid, email: (db.profiles.find(p => p.id === uid) || {}).email });
+  const isAdmin = () => !!db.profiles.find(p => p.id === uid && p.role === 'admin' && p.status !== 'inactive');
+
+  // ---------- RPCs (same rules as schema.sql) ----------
+  const passedMod = (m, u) => db.attempts.some(a => a.module_id === m && a.user_id === u && a.passed);
+  function unlocked(mid) {
+    const m = db.modules.find(x => x.id === mid); if (!m || !m.published) return false;
+    const c = db.courses.find(x => x.id === m.course_id && x.published); if (!c) return false;
+    if (!db.enrollments.some(e => e.course_id === m.course_id && e.user_id === uid)) return false;
+    const p = db.profiles.find(x => x.id === uid); if (!p || p.status === 'inactive') return false;
+    return !db.modules.some(prev => prev.course_id === m.course_id && prev.published && prev.seq < m.seq && !passedMod(prev.id, uid));
+  }
+  const rpc = {
+    claim_invite: () => false,
+    register: ({ p_name, p_phone, p_type, p_course }) => {
+      db.profiles.push({ id: uid, email: user().email, full_name: p_name, phone: p_phone, user_type: p_type, role: 'learner', status: 'active', notes: '', created_at: now() });
+      db.enrollments.push({ user_id: uid, course_id: p_course, created_at: now() });
+      return null;
+    },
+    my_modules: ({ p_course }) => db.modules.filter(m => m.course_id === p_course && m.published).sort((a, b) => a.seq - b.seq).map(m => {
+      const mine = db.attempts.filter(a => a.module_id === m.id && a.user_id === uid);
+      const ok = unlocked(m.id), passed = mine.some(a => a.passed);
+      return { id: m.id, seq: m.seq, title: m.title, description: m.description, videos: ok ? m.videos : null, pass_pct: m.pass_pct,
+        state: passed ? 'passed' : ok ? 'available' : 'locked', best_pct: mine.length ? Math.max(...mine.map(a => +a.pct || 0)) : null,
+        attempt_count: mine.filter(a => a.submitted_at).length };
+    }),
+    my_attempts: () => db.attempts.filter(a => a.user_id === uid && a.submitted_at).sort((a, b) => b.submitted_at.localeCompare(a.submitted_at)).map(a => {
+      const m = db.modules.find(x => x.id === a.module_id);
+      return { id: a.id, course_id: m.course_id, module_id: a.module_id, chapter: m.title, score: a.score, total: a.total, pct: a.pct, passed: a.passed, submitted_at: a.submitted_at };
+    }),
+    start_attempt: ({ p_module }) => {
+      if (!unlocked(p_module)) throw new Error('Module locked');
+      let a = db.attempts.find(x => x.user_id === uid && x.module_id === p_module && !x.submitted_at);
+      if (!a) {
+        const last = db.attempts.filter(x => x.user_id === uid && x.module_id === p_module && x.submitted_at).sort((x, y) => y.submitted_at.localeCompare(x.submitted_at))[0];
+        const prev = last ? last.question_ids : [];
+        const m = db.modules.find(x => x.id === p_module);
+        const pool = db.questions.filter(q => q.module_id === p_module).map(q => ({ q, r: Math.random() + (prev.includes(q.id) ? 1 : 0) })).sort((x, y) => x.r - y.r);
+        a = { id: uuid(), user_id: uid, module_id: p_module, question_ids: pool.slice(0, m.questions_per_test).map(x => x.q.id), started_at: now(), submitted_at: null };
+        db.attempts.push(a);
+      }
+      return { attempt_id: a.id, questions: a.question_ids.map(id => { const q = db.questions.find(x => x.id === id); return { id: q.id, text: q.text, options: q.options }; }) };
+    },
+    submit_attempt: ({ p_attempt, p_answers }) => {
+      const a = db.attempts.find(x => x.id === p_attempt && x.user_id === uid && !x.submitted_at);
+      if (!a) throw new Error('Attempt not found or already submitted');
+      const qs = a.question_ids.map(id => db.questions.find(x => x.id === id));
+      const score = qs.filter(q => +p_answers[q.id] === q.correct).length, total = qs.length;
+      const pass = db.modules.find(m => m.id === a.module_id).pass_pct, pct = Math.round(10000 * score / Math.max(total, 1)) / 100;
+      Object.assign(a, { detail: qs.map(q => ({ question: q.text, options: q.options, correct: q.correct, chosen: +p_answers[q.id] })), score, total, pct, passed: pct >= pass, submitted_at: now() });
+      return { score, total, pct, passed: pct >= pass, pass_pct: pass };
+    },
+    admin_users: () => !isAdmin() ? [] : db.profiles.slice().sort((a, b) => b.created_at.localeCompare(a.created_at)).map(p => {
+      const cids = db.enrollments.filter(e => e.user_id === p.id).map(e => e.course_id);
+      const mine = db.attempts.filter(a => a.user_id === p.id);
+      return { id: p.id, full_name: p.full_name, email: p.email, phone: p.phone, user_type: p.user_type, status: p.status, notes: p.notes, created_at: p.created_at,
+        courses: cids.map(c => db.courses.find(x => x.id === c).title).join(', ') || null,
+        modules_total: db.modules.filter(m => m.published && cids.includes(m.course_id)).length,
+        modules_passed: new Set(mine.filter(a => a.passed).map(a => a.module_id)).size,
+        attempts: mine.filter(a => a.submitted_at).length,
+        last_activity: mine.map(a => a.submitted_at || a.started_at).sort().pop() || null };
+    }),
+  };
+
+  // ---------- tiny PostgREST-style query builder ----------
+  const FK = { courses: 'course_id', profiles: 'user_id', modules: 'module_id' };
+  function splitTop(s) { const out = []; let d = 0, cur = ''; for (const ch of s) { if (ch === '(') d++; if (ch === ')') d--; if (ch === ',' && !d) { out.push(cur.trim()); cur = ''; } else cur += ch; } if (cur.trim()) out.push(cur.trim()); return out; }
+  function project(table, row, sel) {
+    if (!sel || sel === '*') return clone(row);
+    const o = {};
+    splitTop(sel).forEach(part => {
+      const m = part.match(/^(\w+)\((.*)\)$/);
+      if (part === '*') Object.assign(o, clone(row));
+      else if (m) {
+        const [, rel, inner] = m;
+        if (FK[rel] && row[FK[rel]] !== undefined) { const r = db[rel].find(x => x.id === row[FK[rel]]); o[rel] = r ? project(rel, r, inner) : null; }
+        else { const back = FK[table]; const rows = db[rel].filter(x => x[back] === row.id); o[rel] = inner === 'count' ? [{ count: rows.length }] : rows.map(r => project(rel, r, inner)); }
+      } else o[part] = row[part] === undefined ? null : clone(row[part]);
+    });
+    return o;
+  }
+  function from(table) {
+    const st = { op: 'select', sel: '*', filters: [], orders: [], one: null, payload: null, ret: false };
+    const q = {
+      select(s) { if (st.op === 'select') st.sel = s || '*'; else { st.ret = true; st.sel = s || '*'; } return q; },
+      eq(c, v) { st.filters.push(r => r[c] === v); return q; },
+      neq(c, v) { st.filters.push(r => r[c] !== v); return q; },
+      in(c, arr) { st.filters.push(r => arr.includes(r[c])); return q; },
+      not(c, op, v) { st.filters.push(r => op === 'is' && v === null ? r[c] != null : r[c] !== v); return q; },
+      order(c, o) { st.orders.push([c, !(o && o.ascending === false)]); return q; },
+      limit() { return q; },
+      single() { st.one = 'single'; return q; }, maybeSingle() { st.one = 'maybe'; return q; },
+      insert(p) { st.op = 'insert'; st.payload = p; return q; },
+      update(p) { st.op = 'update'; st.payload = p; return q; },
+      delete() { st.op = 'delete'; return q; },
+      then(res, rej) { return Promise.resolve().then(run).then(res, rej); },
+    };
+    function visible(r) { // row level security, as in schema.sql
+      if (isAdmin()) return true;
+      if (table === 'courses') return r.published;
+      if (table === 'profiles') return r.id === uid;
+      if (table === 'enrollments') return r.user_id === uid;
+      return false;
+    }
+    function run() {
+      try {
+        const rows = db[table];
+        if (st.op === 'insert') {
+          if (!isAdmin()) throw new Error('new row violates row-level security policy');
+          const list = (Array.isArray(st.payload) ? st.payload : [st.payload]).map(r => Object.assign({ id: uuid(), created_at: now() }, clone(r)));
+          rows.push(...list);
+          return { data: st.ret ? (st.one ? project(table, list[0], st.sel) : list.map(r => project(table, r, st.sel))) : null, error: null };
+        }
+        let hit = rows.filter(r => visible(r) && st.filters.every(f => f(r)));
+        if (st.op === 'update') { if (!isAdmin()) hit = []; hit.forEach(r => Object.assign(r, clone(st.payload))); }
+        if (st.op === 'delete') { if (!isAdmin()) hit = []; db[table] = rows.filter(r => !hit.includes(r)); return { data: null, error: null }; }
+        st.orders.slice().reverse().forEach(([c, asc]) => hit = hit.slice().sort((a, b) => (a[c] > b[c] ? 1 : a[c] < b[c] ? -1 : 0) * (asc ? 1 : -1)));
+        const out = hit.map(r => project(table, r, st.sel));
+        if (st.one === 'single') return out.length === 1 ? { data: out[0], error: null } : { data: null, error: { message: 'Row not found' } };
+        if (st.one === 'maybe') return { data: out[0] || null, error: null };
+        return { data: out, error: null };
+      } catch (e) { return { data: null, error: { message: e.message } }; }
+    }
+    return q;
+  }
+
+  const client = {
+    auth: {
+      getSession: () => Promise.resolve({ data: { session: signedIn ? { user: user() } : null } }),
+      signInWithOAuth: () => { signedIn = true; setTimeout(() => (window.render || window.boot)(), 50); return Promise.resolve({}); },
+      signOut: () => { signedIn = false; return Promise.resolve({}); },
+      onAuthStateChange: () => ({ data: { subscription: { unsubscribe() {} } } }),
+    },
+    from,
+    rpc: (name, args) => new Promise(r => setTimeout(() => {
+      try { if (!rpc[name]) throw new Error('Unknown function ' + name); r({ data: clone(rpc[name](args || {})), error: null }); }
+      catch (e) { r({ data: null, error: { message: e.message } }); }
+    }, name === 'submit_attempt' ? 500 : 150)),
+  };
+  window.supabase = { createClient: () => client };
+})();
+
+</script>
+  <script>
+// ===== Fill these two from Supabase → Project Settings → API =====
+const SUPABASE_URL = 'https://demo.invalid';
+const SUPABASE_ANON_KEY = 'demo';
+// ==================================================================
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { flowType: 'pkce' } });
+const $app = document.getElementById('app');
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const initials = name => String(name || '?').trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+
+// Lucide icon paths (MIT)
+const ICONS = {
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  lock: '<rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  play: '<polygon points="6 3 20 12 6 21 6 3"/>',
+  left: '<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>',
+  right: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+  logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  userPlus: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/>',
+  layers: '<path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>',
+  download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>',
+  search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  plus: '<path d="M5 12h14"/><path d="M12 5v14"/>',
+  trash: '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>',
+  award: '<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>',
+  retry: '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',
+  external: '<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+  alert: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+  x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  cap: '<path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>',
+  shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+  clipboard: '<rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
+  target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  video: '<path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/>',
+  briefcase: '<path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/>',
+  handshake: '<path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/>',
+  book: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  chart: '<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
+  funnel: '<path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"/>',
+  activity: '<path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/>',
+  pie: '<path d="M21 12c.552 0 1.005-.449.95-.998a10 10 0 0 0-8.953-8.951c-.55-.055-.998.398-.998.95v8a1 1 0 0 0 1 1z"/><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/>',
+  whatsapp: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+  phone: '<path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/>',
+  link: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+  save: '<path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/>',
+};
+const icon = (name, cls = '') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`;
+
+const GOOGLE_G = `<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>`;
+
+// raw: html already contains its own <main> (admin layout)
+function show(html, name, raw = false) {
+  $app.innerHTML = `
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="top"><div class="top-in">
+      <a class="brand" href="#/"><span class="logo">A</span><span>Akshardham <b>Academy</b></span></a>
+      ${name ? `<div class="user">
+        <span class="avatar" aria-hidden="true">${esc(initials(name))}</span>
+        <span class="user-name">${esc(name)}</span>
+        <button class="icon-btn" onclick="logout()" aria-label="Logout" title="Logout">${icon('logout')}</button>
+      </div>` : ''}
+    </div></header>
+    ${raw ? html : `<main id="main" class="fade-in">${html}</main>`}`;
+  scrollTo(0, 0);
+}
+
+function toast(msg, type = '') {
+  let box = document.getElementById('toasts');
+  if (!box) {
+    box = Object.assign(document.createElement('div'), { id: 'toasts' });
+    box.setAttribute('aria-live', 'polite');
+    document.body.append(box);
+  }
+  const t = Object.assign(document.createElement('div'), { className: `toast ${type}` });
+  t.innerHTML = `${icon(type === 'err' ? 'alert' : 'check')}<span>${esc(msg)}</span>`;
+  box.append(t);
+  setTimeout(() => t.remove(), type === 'err' ? 6000 : 3500);
+}
+
+function confetti() {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const colors = ['#2457C5', '#C5A15B', '#0E9384', '#C27C0E'];
+  const box = Object.assign(document.createElement('div'), { className: 'confetti' });
+  box.setAttribute('aria-hidden', 'true');
+  for (let i = 0; i < 70; i++) {
+    const p = document.createElement('i');
+    p.style.cssText = `left:${Math.random() * 100}%;background:${colors[i % 4]};animation-delay:${Math.random() * 0.7}s;animation-duration:${2.2 + Math.random() * 1.5}s`;
+    box.append(p);
+  }
+  document.body.append(box);
+  setTimeout(() => box.remove(), 4500);
+}
+
+// one shared tooltip for every [data-tip] mark (hover or keyboard focus)
+function initTips() {
+  const tip = Object.assign(document.createElement('div'), { id: 'tip' });
+  tip.setAttribute('role', 'tooltip');
+  document.body.append(tip);
+  const on = e => {
+    const el = e.target.closest?.('[data-tip]');
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    tip.textContent = el.dataset.tip;
+    tip.style.left = `${Math.min(innerWidth - 90, Math.max(90, r.left + r.width / 2))}px`;
+    tip.style.top = `${r.top + scrollY - 8}px`;
+    tip.classList.add('on');
+  };
+  const off = () => tip.classList.remove('on');
+  addEventListener('pointerover', on); addEventListener('focusin', on);
+  addEventListener('pointerout', off); addEventListener('focusout', off);
+}
+
+function fail(err) {
+  show(`<div class="card narrow empty">
+    ${icon('alert')}
+    <h2>Something went wrong</h2>
+    <p>${esc(err?.message || err)}</p>
+    <button class="btn btn-primary" onclick="location.reload()">${icon('retry')} Try again</button>
+  </div>`);
+}
+
+async function getSessionProfile() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return {};
+  const { data: profile, error } = await sb.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
+  if (error) throw error;
+  return { user: session.user, profile };
+}
+
+function viewLogin(admin = false) {
+  const perks = admin
+    ? [['users', 'Every learner\'s progress and test results in one place'], ['layers', 'Manage trainings, chapters and the question bank'], ['download', 'Build shortlists and export to CSV']]
+    : [['video', 'Chapter-by-chapter training videos'], ['clipboard', 'A short test after each chapter, pass at 80%'], ['award', 'Clear every chapter to move ahead']];
+  show(`
+    <div class="auth"><div class="auth-grid">
+      <section class="hero">
+        <span class="eyebrow">${icon(admin ? 'shield' : 'cap', 'sm')} Akshardham Associates</span>
+        <h1>${admin ? 'Admin Panel' : 'Training & Assessment Portal'}</h1>
+        <p>${admin ? 'Run training, tests and selection from one place.' : 'Learn, take tests and track your own progress.'}</p>
+        <ul class="perks">${perks.map(([i, t]) => `<li>${icon(i)}<span>${t}</span></li>`).join('')}</ul>
+      </section>
+      <section class="card">
+        <span class="logo" aria-hidden="true">A</span>
+        <h2>Sign in</h2>
+        <p class="muted">Sign in with your Google (Gmail) account in one click. No password to remember.</p>
+        <button class="btn btn-google" onclick="login(this)">${GOOGLE_G} Continue with Google</button>
+        <p class="help" style="margin-top:16px">By signing in you agree to our <a href="privacy.html">Privacy Policy</a>.</p>
+      </section>
+    </div></div>`, null, true);
+}
+
+function login(btn) {
+  if (btn) { btn.disabled = true; btn.lastChild.textContent = ' Opening Google…'; }
+  sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin + location.pathname } });
+}
+
+async function logout() {
+  await sb.auth.signOut();
+  location.hash = '';
+  location.reload();
+}
+
+</script>
+  <script>
+let me, users = [];
+const STATUSES = ['active', 'shortlisted', 'rejected', 'inactive'];
+const STATUS_CLS = { active: 'b-blue', shortlisted: 'b-ok', rejected: 'b-err', inactive: '' };
+const TYPE_LABEL = { candidate: 'Candidate', agent: 'Agent', employee: 'Employee' };
+const uuid = /^[0-9a-f-]{36}$/;
+const portal = () => new URL('./', location.href).href;
+const inviteMsg = () => `Namaste! Akshardham Associates mein apply karne ke liye dhanyavaad. 🙏
+
+Selection ka agla step online training hai:
+1️⃣ Yeh link kholein: ${portal()}
+2️⃣ Apne Gmail se login karke registration bharein
+3️⃣ Har chapter ka video dekhein aur chhota test dein (80% par pass)
+4️⃣ Saare chapter clear hone par hum aapko interview ke liye call karenge
+
+Koi dikkat ho to isi number par message karein.
+— Team Akshardham`;
+const waLink = (phone, text = '') => `https://wa.me/${phone ? '91' + phone : ''}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
+
+async function copyLink() {
+  try { await navigator.clipboard.writeText(portal()); toast('Portal link copied'); }
+  catch { prompt('Copy this link:', portal()); }
+}
+const when = t => t ? new Date(t).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : '—';
+
+const FIELDS = {
+  courses: [
+    ['title', 'Title'],
+    ['category', 'Category / Position (e.g. Sales Executive)'],
+    ['audience', 'Audience (candidate/agent trainings appear on the registration form)', ['all', 'candidate', 'agent', 'employee']],
+    ['description', 'Description', 'textarea'],
+    ['published', 'Published (visible to learners)', 'checkbox'],
+  ],
+  modules: [
+    ['seq', 'Chapter number (1, 2, 3…)', 'number'],
+    ['title', 'Title'],
+    ['videos', 'YouTube links (one per line)', 'textarea'],
+    ['description', 'Description / instructions', 'textarea'],
+    ['pass_pct', 'Pass mark %', 'number'],
+    ['questions_per_test', 'Questions per test', 'number'],
+    ['published', 'Published (visible to learners)', 'checkbox'],
+  ],
+};
+
+// "Question | Option 1 | Option 2 | … | <correct option number>" per line
+function parseQuestions(text, moduleId) {
+  const rows = [], bad = [];
+  text.split('\n').map(l => l.trim()).filter(Boolean).forEach((line, i) => {
+    const parts = line.split('|').map(s => s.trim());
+    const correct = Number(parts.pop()) - 1;
+    const [qtext, ...options] = parts;
+    if (!qtext || options.length < 2 || options.length > 6 || options.some(o => !o)
+        || !Number.isInteger(correct) || correct < 0 || correct >= options.length) bad.push(i + 1);
+    else rows.push({ module_id: moduleId, text: qtext, options, correct });
+  });
+  return { rows, bad };
+}
+
+async function boot() {
+  try {
+    let { user, profile } = await getSessionProfile();
+    if (!user) return viewLogin(true);
+    if (!profile) { // employee pre-added by an admin, signing in here first
+      const { data: claimed } = await sb.rpc('claim_invite');
+      if (claimed) ({ profile } = await getSessionProfile());
+    }
+    if (profile?.role !== 'admin') return show(`<div class="card narrow empty">${icon('shield')}<h2>No access</h2><p>${esc(user.email)} is not an admin account.</p><p class="small">See the "Create the first admin" step in the README.</p></div>`, user.email);
+    me = profile;
+    await route();
+  } catch (e) { fail(e); }
+}
+
+async function route() {
+  try {
+    const [, page, id] = location.hash.split('/');
+    if (page === 'users') return await viewUsers();
+    if (page === 'user' && uuid.test(id)) return await viewUser(id);
+    if (page === 'courses') return await viewCourses();
+    if (page === 'course' && uuid.test(id)) return await viewCourse(id);
+    if (page === 'module' && uuid.test(id)) return await viewModule(id);
+    return await viewOverview();
+  } catch (e) { fail(e); }
+}
+
+function adminShow(html) {
+  const section = /^#\/(courses|course|module)/.test(location.hash) ? 'courses'
+    : /^#\/(users|user)/.test(location.hash) ? 'users' : 'overview';
+  const item = (href, ic, label, on, ext) =>
+    `<a class="nav-item ${on ? 'on' : ''}" href="${href}" ${on ? 'aria-current="page"' : ''} ${ext ? 'target="_blank" rel="noopener"' : ''}>${icon(ic)} ${label}</a>`;
+  show(`<div class="admin">
+    <aside class="side"><p class="label">Admin</p><nav aria-label="Admin">
+      ${item('#/', 'chart', 'Overview', section === 'overview')}
+      ${item('#/users', 'users', 'Learners', section === 'users')}
+      ${item('#/courses', 'layers', 'Trainings & Tests', section === 'courses')}
+      ${item('index.html', 'external', 'Learner view', false, true)}
+    </nav></aside>
+    <main id="main" class="fade-in">${html}</main>
+  </div>`, me.full_name, true);
+}
+
+// ---------- overview dashboard ----------
+
+// learner-type hues, checked with the dataviz validate_palette script (light surface: all checks pass)
+const MIX = { candidate: '#2457C5', agent: '#C27C0E', employee: '#0E9384' };
+const pctOf = (n, d) => d ? Math.round(100 * n / d) : 0;
+const ago = t => {
+  const s = (Date.now() - new Date(t)) / 1000;
+  return s < 60 ? 'just now' : s < 3600 ? `${Math.floor(s / 60)}m ago` : s < 86400 ? `${Math.floor(s / 3600)}h ago` : `${Math.floor(s / 86400)}d ago`;
+};
+let ov = { type: '' };
+
+async function viewOverview() {
+  const [u, a, m] = await Promise.all([
+    sb.rpc('admin_users'),
+    sb.from('attempts').select('user_id,module_id,passed,pct,submitted_at,profiles(full_name)').not('submitted_at', 'is', null).order('submitted_at', { ascending: false }),
+    sb.from('modules').select('id,seq,title,courses(title)').eq('published', true).order('seq'),
+  ]);
+  const err = u.error || a.error || m.error;
+  if (err) throw err;
+  ov = { ...ov, users: u.data, attempts: a.data, modules: m.data };
+  adminShow('<div id="ov"></div>');
+  drawOverview();
+}
+
+function drawOverview() {
+  const t = ov.type;
+  const users = ov.users.filter(u => !t || u.user_type === t);
+  const ids = new Set(users.map(u => u.id));
+  const atts = ov.attempts.filter(a => ids.has(a.user_id));
+  const enrolled = users.filter(u => u.modules_total > 0);
+  const done = enrolled.filter(u => u.modules_passed >= u.modules_total);
+  const newWeek = users.filter(u => Date.now() - new Date(u.created_at) < 7 * 864e5).length;
+  const passRate = pctOf(atts.filter(a => a.passed).length, atts.length);
+
+  const funnel = [
+    ['Registered', users.length],
+    ['Took a test', users.filter(u => u.attempts > 0).length],
+    ['Passed a chapter', users.filter(u => u.modules_passed > 0).length],
+    ['Completed all chapters', done.length],
+    ['Shortlisted', users.filter(u => u.status === 'shortlisted').length],
+  ];
+
+  const days = [...Array(30)].map((_, i) => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - 29 + i); return d; });
+  const reg = days.map(d => users.filter(u => { const c = new Date(u.created_at); return c >= d && c - d < 864e5; }).length);
+  const maxReg = Math.max(1, ...reg);
+  const fmtDay = d => d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+
+  const chapters = ov.modules.map(m => {
+    const ma = atts.filter(a => a.module_id === m.id);
+    const learners = new Set(ma.map(a => a.user_id)).size;
+    const passed = new Set(ma.filter(a => a.passed).map(a => a.user_id)).size;
+    return { m, learners, passed, rate: pctOf(passed, learners),
+      avg: ma.length ? Math.round(ma.reduce((s, a) => s + Number(a.pct), 0) / ma.length) : null,
+      tries: learners ? (ma.length / learners).toFixed(1) : '—' };
+  });
+  // ponytail: "hardest" needs 3+ learners so one bad attempt doesn't flag a chapter
+  const rated = chapters.filter(c => c.learners >= 3);
+  const hardest = rated.length > 1 ? rated.reduce((a, b) => (b.rate < a.rate ? b : a)) : null;
+
+  const mix = Object.keys(MIX).map(k => [k, ov.users.filter(u => u.user_type === k).length]);
+  const mixTotal = ov.users.length;
+
+  const tile = (ic, cls, val, lbl, sub) => `<div class="stat"><span class="ico ${cls}">${icon(ic)}</span><div><div class="val">${val}</div><div class="lbl">${lbl}</div>${sub ? `<div class="sub">${sub}</div>` : ''}</div></div>`;
+  const filters = [['', 'Everyone'], ['candidate', 'Candidates'], ['agent', 'Agents'], ['employee', 'Employees']];
+
+  document.getElementById('ov').innerHTML = `
+    <div class="page-head">
+      <div><h1>Overview</h1><p class="muted">How training and selection are going</p></div>
+      <div class="seg" role="group" aria-label="Show learners">${filters.map(([v, l]) =>
+        `<button class="${v === t ? 'on' : ''}" aria-pressed="${v === t}" onclick="ov.type='${v}';drawOverview()">${l}</button>`).join('')}</div>
+    </div>
+    <div class="stats stagger">
+      ${tile('users', '', users.length, 'Learners', `+${newWeek} this week`)}
+      ${tile('award', 'ok', done.length, 'Completed all chapters', `${pctOf(done.length, enrolled.length)}% of enrolled`)}
+      ${tile('clipboard', 'gold', atts.length, 'Tests taken', `${passRate}% of attempts passed`)}
+      ${tile('check', 'ok', funnel[4][1], 'Shortlisted', `${pctOf(funnel[4][1], users.length)}% of learners`)}
+    </div>
+
+    <div class="chart-grid">
+      <section class="card">
+        <div class="card-head"><h2>${icon('funnel')} Selection funnel</h2><span class="muted small">% of registered</span></div>
+        <div class="funnel">${funnel.map(([l, n]) => {
+          const p = pctOf(n, funnel[0][1]);
+          return `<div class="f-row" tabindex="0" data-tip="${l}: ${n} (${p}% of registered)">
+            <span class="f-lbl">${l}</span>
+            <div class="f-track"><i style="width:${p}%"></i></div>
+            <span class="f-val num">${n} <span class="sub">${p}%</span></span>
+          </div>`;
+        }).join('')}</div>
+      </section>
+      <section class="card">
+        <div class="card-head"><h2>${icon('chart')} New registrations</h2><span class="muted small">Last 30 days · ${reg.reduce((s, n) => s + n, 0)} total</span></div>
+        <div class="cols">
+          <div class="cols-y" aria-hidden="true"><span class="num">${maxReg}</span><span class="num">0</span></div>
+          <div class="cols-plot">${reg.map((n, i) =>
+            `<div class="col" tabindex="0" data-tip="${fmtDay(days[i])}: ${n} registration${n === 1 ? '' : 's'}" aria-label="${fmtDay(days[i])}: ${n}"><i style="height:${100 * n / maxReg}%"></i></div>`).join('')}</div>
+        </div>
+        <div class="cols-x" aria-hidden="true"><span>${fmtDay(days[0])}</span><span>${fmtDay(days[15])}</span><span>Today</span></div>
+      </section>
+    </div>
+
+    <section class="card">
+      <div class="card-head"><h2>${icon('book')} Chapter performance</h2><span class="muted small">Pass rate = learners who passed ÷ learners who attempted</span></div>
+      ${chapters.length ? `<div class="table-wrap"><table>
+        <thead><tr><th>Chapter</th><th>Attempted</th><th style="min-width:180px">Pass rate</th><th>Avg score</th><th>Avg tries</th></tr></thead>
+        <tbody>${chapters.map(c => `<tr>
+          <td><a href="#/module/${c.m.id}" style="font-weight:600">Ch ${c.m.seq}: ${esc(c.m.title)}</a>
+            <div class="sub">${esc(c.m.courses?.title)}</div>
+            ${c === hardest ? `<span class="badge b-warn" style="margin-top:4px">${icon('alert')} Lowest pass rate</span>` : ''}</td>
+          <td class="num">${c.learners}</td>
+          <td><div class="mini-bar" data-tip="${c.passed} of ${c.learners} passed" tabindex="0"><div class="bar"><i style="width:${c.rate}%"></i></div><span class="num small">${c.learners ? c.rate + '%' : '—'}</span></div></td>
+          <td class="num">${c.avg ?? '—'}${c.avg != null ? '%' : ''}</td>
+          <td class="num">${c.tries}</td>
+        </tr>`).join('')}</tbody>
+      </table></div>` : `<div class="empty">${icon('book')}<p>Publish a chapter to see its results here.</p></div>`}
+    </section>
+
+    <div class="chart-grid">
+      <section class="card">
+        <div class="card-head"><h2>${icon('pie')} Learner mix</h2><span class="muted small">All ${mixTotal} learners</span></div>
+        <div class="stack" role="img" aria-label="${mix.map(([k, n]) => `${TYPE_LABEL[k]} ${n}`).join(', ')}">${mix.filter(([, n]) => n).map(([k, n]) =>
+          `<i style="flex:${n};background:${MIX[k]}" tabindex="0" data-tip="${TYPE_LABEL[k]}: ${n} (${pctOf(n, mixTotal)}%)"></i>`).join('') || '<i style="flex:1;background:#E7ECF3"></i>'}</div>
+        <ul class="legend">${mix.map(([k, n]) => `<li><span class="sw" style="background:${MIX[k]}"></span>${TYPE_LABEL[k]}s<b class="num">${n}</b><span class="sub">${pctOf(n, mixTotal)}%</span></li>`).join('')}</ul>
+        <h3 style="margin-top:20px">By status${t ? ` · ${TYPE_LABEL[t]}s` : ''}</h3>
+        <div class="row">${STATUSES.map(s => `<a class="badge ${STATUS_CLS[s]}" href="#/users" style="text-decoration:none">${s} <b class="num">${users.filter(u => u.status === s).length}</b></a>`).join('')}</div>
+      </section>
+      <section class="card">
+        <div class="card-head"><h2>${icon('activity')} Recent tests</h2><a class="small" href="#/users">All learners →</a></div>
+        ${atts.length ? `<ul class="feed">${atts.slice(0, 8).map(a => {
+          const m = ov.modules.find(x => x.id === a.module_id);
+          return `<li>
+            <span class="avatar" aria-hidden="true">${esc(initials(a.profiles?.full_name))}</span>
+            <div style="flex:1;min-width:0"><a href="#/user/${a.user_id}" style="font-weight:600">${esc(a.profiles?.full_name)}</a>
+              <div class="sub">${m ? `Ch ${m.seq}: ${esc(m.title)}` : 'Chapter'} · ${ago(a.submitted_at)}</div></div>
+            <span class="badge ${a.passed ? 'b-ok' : 'b-err'}">${icon(a.passed ? 'check' : 'x')} ${Math.round(a.pct)}%</span>
+          </li>`;
+        }).join('')}</ul>` : `<div class="empty">${icon('activity')}<p>No tests taken yet.</p></div>`}
+      </section>
+    </div>`;
+}
+
+// ---------- users ----------
+
+async function viewUsers() {
+  const [u, inv, courses] = await Promise.all([
+    sb.rpc('admin_users'),
+    sb.from('employee_invites').select('*').order('created_at', { ascending: false }),
+    sb.from('courses').select('id,title,category').order('title'),
+  ]);
+  const err = u.error || inv.error || courses.error;
+  if (err) throw err;
+  users = u.data;
+  const titles = Object.fromEntries(courses.data.map(c => [c.id, c.title]));
+  adminShow(`
+    <div class="page-head">
+      <div><h1>Learners</h1><p class="muted">Progress of candidates, agents and employees</p></div>
+      <div class="row">
+        <a class="btn btn-primary" href="${waLink('', inviteMsg())}" target="_blank" rel="noopener">${icon('whatsapp', 'sm')} Invite on WhatsApp</a>
+        <button class="btn" onclick="copyLink()">${icon('link', 'sm')} Copy portal link</button>
+        <button class="btn" onclick="exportCsv()">${icon('download', 'sm')} Export CSV</button>
+      </div>
+    </div>
+    <details class="card" ${inv.data.length ? 'open' : ''}>
+      <summary>${icon('userPlus')} Add employee <span class="badge">${inv.data.length} pending sign-in</span></summary>
+      <p class="muted small">Employees don't register themselves. Add their Gmail here, and their account is created automatically the first time they sign in with it.</p>
+      <form onsubmit="addEmployee(event)">
+        <div class="grid-2">
+          <div class="field"><label for="e-name">Name</label><input id="e-name" name="full_name" type="text" required></div>
+          <div class="field"><label for="e-email">Gmail</label><input id="e-email" name="email" type="email" required placeholder="name@gmail.com"></div>
+          <div class="field"><label for="e-phone">Mobile</label><input id="e-phone" name="phone" type="tel" required pattern="[6-9][0-9]{9}" maxlength="10" inputmode="numeric"></div>
+          <div class="field"><label for="e-course">Training</label><select id="e-course" name="course"><option value="">Assign later</option>${courses.data.map(c => `<option value="${c.id}">${esc(c.category)} — ${esc(c.title)}</option>`).join('')}</select></div>
+        </div>
+        <button class="btn btn-primary" type="submit">${icon('plus', 'sm')} Add employee</button>
+      </form>
+      ${inv.data.length ? `<div class="table-wrap" style="margin-top:16px"><table>
+        <thead><tr><th>Name</th><th>Gmail</th><th>Mobile</th><th>Training</th><th><span class="sr-only">Action</span></th></tr></thead>
+        <tbody>${inv.data.map(i => `<tr><td>${esc(i.full_name)}</td><td>${esc(i.email)}</td><td class="num">${esc(i.phone)}</td>
+          <td>${i.course_ids.map(id => esc(titles[id] || '—')).join(', ') || '—'}</td>
+          <td><button class="btn btn-sm btn-danger" onclick="delInvite(${esc(JSON.stringify(i.email))})" aria-label="Remove">${icon('trash', 'sm')}</button></td></tr>`).join('')}</tbody>
+      </table></div>` : ''}
+    </details>
+    <section class="card">
+      <div class="toolbar">
+        <div class="search">${icon('search', 'sm')}<input id="f-q" type="search" placeholder="Search name, mobile or email" oninput="drawUsers()" aria-label="Search"></div>
+        <select id="f-type" onchange="drawUsers()" aria-label="Type">
+          <option value="">Everyone</option><option value="candidate">Candidates</option><option value="agent">Agents</option><option value="employee">Employees</option>
+        </select>
+        <select id="f-status" onchange="drawUsers()" aria-label="Status">
+          <option value="">Any status</option>${STATUSES.map(s => `<option>${s}</option>`).join('')}
+        </select>
+        <label class="check" style="flex:0 1 auto"><input type="checkbox" id="f-done" onchange="drawUsers()"> Only those who completed all chapters</label>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Learner</th><th>Type</th><th>Training</th><th>Progress</th><th>Attempts</th><th>Last activity</th><th>Status</th></tr></thead>
+        <tbody id="u-body"></tbody>
+      </table></div>
+    </section>`);
+  drawUsers();
+}
+
+function filtered() {
+  const q = document.getElementById('f-q').value.toLowerCase();
+  const type = document.getElementById('f-type').value;
+  const status = document.getElementById('f-status').value;
+  const done = document.getElementById('f-done').checked;
+  return users.filter(u =>
+    (!q || [u.full_name, u.phone, u.email].some(v => (v || '').toLowerCase().includes(q))) &&
+    (!type || u.user_type === type) && (!status || u.status === status) &&
+    (!done || (u.modules_total > 0 && u.modules_passed >= u.modules_total)));
+}
+
+function drawUsers() {
+  const rows = filtered();
+  document.getElementById('u-body').innerHTML = rows.map(u => {
+    const pct = u.modules_total ? Math.round(100 * u.modules_passed / u.modules_total) : 0;
+    return `<tr>
+      <td><div class="person"><span class="avatar" aria-hidden="true">${esc(initials(u.full_name))}</span>
+        <div><a href="#/user/${u.id}">${esc(u.full_name)}</a><div class="sub">${esc(u.email)}</div><div class="sub num">${esc(u.phone)}</div></div></div></td>
+      <td>${TYPE_LABEL[u.user_type] || esc(u.user_type)}</td>
+      <td>${esc(u.courses || '—')}</td>
+      <td><div class="mini-bar"><div class="bar"><i style="width:${pct}%"></i></div><span class="num small">${u.modules_passed}/${u.modules_total}</span>${pct === 100 ? icon('award', 'sm') : ''}</div></td>
+      <td class="num">${u.attempts}</td>
+      <td class="small">${when(u.last_activity)}</td>
+      <td><select class="status" onchange="setStatus('${u.id}', this.value)" aria-label="Status for ${esc(u.full_name)}">${STATUSES.map(s => `<option ${s === u.status ? 'selected' : ''}>${s}</option>`).join('')}</select></td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="7"><div class="empty">${icon('users')}<p>No records found. Share the learner portal link with your candidates.</p></div></td></tr>`;
+}
+
+async function addEmployee(e) {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const email = fd.get('email').trim().toLowerCase();
+  const dup = users.find(u => (u.email || '').toLowerCase() === email || u.phone === fd.get('phone'));
+  if (dup) return toast(`${dup.full_name} already has an account with this ${dup.phone === fd.get('phone') ? 'mobile number' : 'email'}. Open their profile and change Type to Employee instead.`, 'err');
+  const { error } = await sb.from('employee_invites').insert({
+    email, full_name: fd.get('full_name').trim(), phone: fd.get('phone'),
+    course_ids: fd.get('course') ? [fd.get('course')] : [],
+  });
+  if (error) return toast(error.code === '23505' ? 'This email has already been added.' : error.message, 'err');
+  toast('Employee added');
+  route();
+}
+
+async function delInvite(email) {
+  if (!confirm(`Remove ${email} from the list?`)) return;
+  const { error } = await sb.from('employee_invites').delete().eq('email', email);
+  if (error) return toast(error.message, 'err');
+  route();
+}
+
+async function setStatus(id, status) {
+  const { error } = await sb.from('profiles').update({ status }).eq('id', id);
+  if (error) return toast(error.message, 'err');
+  const u = users.find(x => x.id === id);
+  if (u) u.status = status;
+  toast(`Status set to ${status}`);
+}
+
+function exportCsv() {
+  const cols = ['full_name', 'phone', 'email', 'user_type', 'courses', 'modules_passed', 'modules_total', 'attempts', 'status', 'last_activity', 'created_at'];
+  // leading = + - @ would run as a formula in Excel
+  const cell = v => { let s = String(v ?? ''); if (/^[=+\-@]/.test(s)) s = "'" + s; return `"${s.replace(/"/g, '""')}"`; };
+  const csv = [cols.join(','), ...filtered().map(u => cols.map(c => cell(u[c])).join(','))].join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' }));
+  a.download = `lms-users-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+}
+
+async function viewUser(id) {
+  const [p, att, enr, courses] = await Promise.all([
+    sb.from('profiles').select('*').eq('id', id).single(),
+    sb.from('attempts').select('id,score,total,pct,passed,started_at,submitted_at,detail,modules(title,seq,courses(title))').eq('user_id', id).order('started_at', { ascending: false }),
+    sb.from('enrollments').select('course_id,courses(title)').eq('user_id', id),
+    sb.from('courses').select('id,title,category').order('title'),
+  ]);
+  const err = p.error || att.error || enr.error || courses.error;
+  if (err) throw err;
+  const u = p.data, enrolled = new Set(enr.data.map(e => e.course_id));
+  const available = courses.data.filter(c => !enrolled.has(c.id));
+  adminShow(`
+    <a class="crumb" href="#/users">${icon('left', 'sm')} All learners</a>
+    <section class="card">
+      <div class="row" style="align-items:flex-start;gap:16px">
+        <span class="avatar lg" aria-hidden="true">${esc(initials(u.full_name))}</span>
+        <div style="flex:1;min-width:200px">
+          <h1 style="margin-bottom:4px">${esc(u.full_name)} ${u.role === 'admin' ? `<span class="badge b-gold">${icon('shield')} Admin</span>` : ''}</h1>
+          <div class="row small muted"><span>${esc(u.phone)}</span>·<span>${esc(u.email)}</span>·<span>Registered ${when(u.created_at)}</span>
+            <label class="row" style="margin:0;gap:6px;font-weight:600">Type
+              <select class="status" onchange="setType('${u.id}', this.value)" ${u.id === me.id ? 'disabled' : ''}>${Object.entries(TYPE_LABEL).map(([v, l]) => `<option value="${v}" ${v === u.user_type ? 'selected' : ''}>${l}</option>`).join('')}</select>
+            </label></div>
+          <div class="row" style="margin-top:12px">
+            <a class="btn btn-sm" href="${waLink(u.phone)}" target="_blank" rel="noopener">${icon('whatsapp', 'sm')} WhatsApp</a>
+            <a class="btn btn-sm" href="tel:+91${esc(u.phone)}">${icon('phone', 'sm')} Call</a>
+            ${u.id === me.id ? '' : u.role === 'admin'
+              ? `<button class="btn btn-sm btn-danger" onclick="setRole('${u.id}','learner')">${icon('shield', 'sm')} Remove admin</button>`
+              : u.user_type === 'employee' ? `<button class="btn btn-sm" onclick="setRole('${u.id}','admin')">${icon('shield', 'sm')} Make admin</button>` : ''}
+          </div>
+          <div class="row" style="margin-top:12px">${STATUSES.map(s => `<button class="btn btn-sm ${s === u.status ? 'btn-primary' : ''}" ${s === u.status ? 'aria-pressed="true"' : ''} onclick="setStatus('${u.id}','${s}').then(route)">${s}</button>`).join('')}</div>
+        </div>
+      </div>
+      <div class="field" style="margin:20px 0 0">
+        <label for="notes">Notes (interview / call remarks)</label>
+        <textarea id="notes">${esc(u.notes)}</textarea>
+        <button class="btn btn-sm" style="margin-top:8px" onclick="saveNotes('${u.id}')">${icon('save', 'sm')} Save notes</button>
+      </div>
+    </section>
+    <section class="card">
+      <div class="card-head"><h2>${icon('layers')} Trainings</h2></div>
+      ${enr.data.map(e => `<div class="qb-item"><span>${esc(e.courses?.title)}</span><button class="btn btn-sm btn-danger" onclick="unenroll('${u.id}','${e.course_id}')">${icon('trash', 'sm')} Remove</button></div>`).join('') || '<p class="muted">No training assigned.</p>'}
+      ${available.length ? `<div class="row" style="margin-top:12px">
+        <select id="enroll-course" style="flex:1;min-width:200px" aria-label="Training">${available.map(c => `<option value="${c.id}">${esc(c.category)} — ${esc(c.title)}</option>`).join('')}</select>
+        <button class="btn btn-primary" onclick="enroll('${u.id}')">${icon('plus', 'sm')} Assign</button>
+      </div>` : ''}
+    </section>
+    <section class="card">
+      <div class="card-head"><h2>${icon('clipboard')} Test attempts</h2><span class="muted small">${att.data.length} total</span></div>
+      ${att.data.map(a => `
+        <details class="attempt">
+          <summary>
+            ${a.submitted_at ? `<span class="badge ${a.passed ? 'b-ok' : 'b-err'}">${icon(a.passed ? 'check' : 'x')} ${a.passed ? 'PASS' : 'FAIL'}</span>` : '<span class="badge b-warn">In progress</span>'}
+            <strong>Ch ${a.modules?.seq}: ${esc(a.modules?.title)}</strong>
+            ${a.submitted_at ? `<span class="num">${a.score}/${a.total} (${Math.round(a.pct)}%)</span>` : ''}
+            <span class="sub" style="margin-left:auto">${esc(a.modules?.courses?.title)} · ${when(a.submitted_at || a.started_at)}</span>
+          </summary>
+          <div class="attempt-body">${(a.detail || []).map((d, i) => `
+            <p style="margin-top:12px"><strong>${i + 1}. ${esc(d.question)}</strong><br>
+            ${d.options.map((o, j) => `<span class="${j === d.correct ? 'ok-t' : j === d.chosen ? 'err-t' : ''}">${j === d.chosen ? '● ' : '○ '}${esc(o)}${j === d.correct ? ' ✓' : ''}</span>`).join('<br>')}</p>`).join('') || '<p class="muted" style="margin-top:12px">Not submitted yet.</p>'}</div>
+        </details>`).join('') || `<div class="empty">${icon('clipboard')}<p>No tests taken yet.</p></div>`}
+    </section>`);
+}
+
+// e.g. a selected candidate joins the team → Employee (also unlocks "Make admin")
+async function setType(id, type) {
+  const { error } = await sb.from('profiles').update({ user_type: type }).eq('id', id);
+  if (error) return toast(error.message, 'err');
+  toast(`Type changed to ${TYPE_LABEL[type]}`);
+  route();
+}
+
+// only employees can be promoted, and never yourself (so you can't lock yourself out)
+async function setRole(id, role) {
+  if (!confirm(role === 'admin'
+    ? 'Give this person full admin access? They will see every learner, all results, and can edit trainings.'
+    : 'Remove admin access from this person?')) return;
+  const { error } = await sb.from('profiles').update({ role }).eq('id', id);
+  if (error) return toast(error.message, 'err');
+  toast(role === 'admin' ? 'Admin access given' : 'Admin access removed');
+  route();
+}
+
+async function saveNotes(id) {
+  const { error } = await sb.from('profiles').update({ notes: document.getElementById('notes').value }).eq('id', id);
+  error ? toast(error.message, 'err') : toast('Notes saved');
+}
+
+async function enroll(userId) {
+  const course_id = document.getElementById('enroll-course').value;
+  const { error } = await sb.from('enrollments').insert({ user_id: userId, course_id });
+  if (error) return toast(error.message, 'err');
+  toast('Training assigned');
+  route();
+}
+
+async function unenroll(userId, courseId) {
+  if (!confirm('Remove this training? Test history will be kept.')) return;
+  const { error } = await sb.from('enrollments').delete().eq('user_id', userId).eq('course_id', courseId);
+  if (error) return toast(error.message, 'err');
+  route();
+}
+
+// ---------- courses / modules / questions ----------
+
+function form(table, row, extra = {}) {
+  const fields = FIELDS[table].map(([k, label, type]) => {
+    const v = row[k] ?? '', id = `f-${table}-${k}`;
+    if (Array.isArray(type)) return `<div class="field"><label for="${id}">${label}</label><select id="${id}" name="${k}">${type.map(o => `<option ${o === v ? 'selected' : ''}>${o}</option>`).join('')}</select></div>`;
+    if (type === 'textarea') return `<div class="field"><label for="${id}">${label}</label><textarea id="${id}" name="${k}">${esc(v)}</textarea></div>`;
+    if (type === 'checkbox') return `<div class="field"><label class="check"><input type="checkbox" name="${k}" ${v ? 'checked' : ''}> ${label}</label></div>`;
+    return `<div class="field"><label for="${id}">${label}</label><input id="${id}" name="${k}" type="${type || 'text'}" value="${esc(v)}" ${k === 'title' || type === 'number' ? 'required' : ''} ${type === 'number' ? 'min="1"' : ''}></div>`;
+  }).join('');
+  const noun = table === 'courses' ? 'training' : 'chapter';
+  return `<form class="card" onsubmit="save(event,'${table}','${row.id || ''}',${esc(JSON.stringify(extra))})">
+    <div class="card-head"><h2>${icon(row.id ? 'save' : 'plus')} ${row.id ? `${noun[0].toUpperCase() + noun.slice(1)} settings` : `New ${noun}`}</h2></div>
+    ${fields}
+    <div class="row"><button class="btn btn-primary" type="submit">${icon('save', 'sm')} Save</button>
+    ${row.id ? `<button type="button" class="btn btn-danger" onclick="del('${table}','${row.id}','${table === 'courses' ? '#/courses' : `#/course/${row.course_id}`}')">${icon('trash', 'sm')} Delete</button>` : ''}</div>
+  </form>`;
+}
+
+async function save(e, table, id, extra) {
+  e.preventDefault();
+  const fd = new FormData(e.target), row = { ...extra };
+  for (const [k, , type] of FIELDS[table]) row[k] = type === 'checkbox' ? fd.has(k) : type === 'number' ? Number(fd.get(k)) : fd.get(k).trim();
+  const { data, error } = id
+    ? await sb.from(table).update(row).eq('id', id).select().single()
+    : await sb.from(table).insert(row).select().single();
+  if (error) return toast(error.message, 'err');
+  toast('Saved');
+  if (!id && table === 'courses') location.hash = `#/course/${data.id}`;
+  else if (!id) location.hash = `#/module/${data.id}`;
+  else route();
+}
+
+async function del(table, id, back) {
+  if (!confirm('Delete this permanently? Everything inside it will be deleted too.')) return;
+  const { error } = await sb.from(table).delete().eq('id', id);
+  if (error) return toast(error.code === '23503'
+    ? 'Learners have test attempts on this, so it can\'t be deleted. Untick "Published" to hide it instead.' : error.message, 'err');
+  toast('Deleted');
+  location.hash = back; // not history.back(): a deep-linked page has no in-app history
+}
+
+const pubBadge = p => `<span class="badge ${p ? 'b-ok' : ''}">${p ? icon('check') + ' Published' : 'Draft'}</span>`;
+
+async function viewCourses() {
+  const { data, error } = await sb.from('courses').select('*, modules(count)').order('category').order('title');
+  if (error) throw error;
+  adminShow(`
+    <div class="page-head"><div><h1>Trainings & Tests</h1><p class="muted">Training, chapters and question bank for each position</p></div></div>
+    <section class="card">
+      ${data.length ? `<div class="table-wrap"><table>
+        <thead><tr><th>Training</th><th>Category</th><th>Audience</th><th>Chapters</th><th>Status</th></tr></thead>
+        <tbody>${data.map(c => `<tr>
+          <td><a href="#/course/${c.id}" style="font-weight:600">${esc(c.title)}</a></td><td><span class="badge b-gold">${esc(c.category)}</span></td>
+          <td>${c.audience}</td><td class="num">${c.modules[0]?.count ?? 0}</td><td>${pubBadge(c.published)}</td>
+        </tr>`).join('')}</tbody>
+      </table></div>` : `<div class="empty">${icon('layers')}<p>No trainings yet. Create your first one using the form below.</p></div>`}
+    </section>
+    ${form('courses', { audience: 'all' })}`);
+}
+
+async function viewCourse(id) {
+  const [c, m] = await Promise.all([
+    sb.from('courses').select('*').eq('id', id).single(),
+    sb.from('modules').select('*, questions(count)').eq('course_id', id).order('seq').order('id'),
+  ]);
+  if (c.error || m.error) throw c.error || m.error;
+  const next = (m.data.at(-1)?.seq ?? 0) + 1;
+  adminShow(`
+    <a class="crumb" href="#/courses">${icon('left', 'sm')} All trainings</a>
+    <div class="page-head"><div><span class="badge b-gold">${esc(c.data.category)}</span><h1 style="margin-top:8px">${esc(c.data.title)}</h1></div>${pubBadge(c.data.published)}</div>
+    <section class="card">
+      <div class="card-head"><h2>${icon('book')} Chapters</h2></div>
+      ${m.data.length ? `<div class="table-wrap"><table>
+        <thead><tr><th>#</th><th>Chapter</th><th>Videos</th><th>Questions (pool / per test)</th><th>Pass mark</th><th>Status</th></tr></thead>
+        <tbody>${m.data.map(x => {
+          const pool = x.questions[0]?.count ?? 0;
+          return `<tr>
+            <td class="num">${x.seq}</td><td><a href="#/module/${x.id}" style="font-weight:600">${esc(x.title)}</a></td>
+            <td class="num">${(x.videos || '').split(/\s+/).filter(Boolean).length}</td>
+            <td class="num">${pool} / ${x.questions_per_test} ${pool < x.questions_per_test ? `<span class="badge b-warn">${icon('alert')} Too few</span>` : ''}</td>
+            <td class="num">${x.pass_pct}%</td><td>${pubBadge(x.published)}</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table></div>` : `<div class="empty">${icon('book')}<p>No chapters yet. Create the first one below.</p></div>`}
+    </section>
+    ${form('modules', { seq: next, pass_pct: 80, questions_per_test: 10 }, { course_id: id })}
+    ${form('courses', c.data)}`);
+}
+
+async function viewModule(id) {
+  const [m, q] = await Promise.all([
+    sb.from('modules').select('*, courses(id,title)').eq('id', id).single(),
+    sb.from('questions').select('*').eq('module_id', id).order('created_at'),
+  ]);
+  if (m.error || q.error) throw m.error || q.error;
+  const mod = m.data, pool = q.data.length;
+  adminShow(`
+    <a class="crumb" href="#/course/${mod.courses.id}">${icon('left', 'sm')} ${esc(mod.courses.title)}</a>
+    <div class="page-head"><div><span class="eyebrow" style="color:#8A6A2B">Chapter ${mod.seq}</span><h1>${esc(mod.title)}</h1></div>${pubBadge(mod.published)}</div>
+    <section class="card">
+      <div class="card-head"><h2>${icon('clipboard')} Question bank</h2><span class="badge b-blue">${pool} question${pool === 1 ? '' : 's'}</span></div>
+      ${pool < mod.questions_per_test ? `<div class="notice">${icon('alert')}<span>The test needs at least <strong>${mod.questions_per_test}</strong> questions.</span></div>`
+        : pool < 2 * mod.questions_per_test ? `<div class="notice info">${icon('retry')}<span>Add ${2 * mod.questions_per_test}+ questions so retries get a fresh paper.</span></div>` : ''}
+      ${q.data.map((x, i) => `<div class="qb-item">
+        <div><strong>${i + 1}. ${esc(x.text)}</strong>
+          <ol>${x.options.map((o, j) => `<li class="${j === x.correct ? 'ok-t' : ''}">${esc(o)}${j === x.correct ? ' ✓' : ''}</li>`).join('')}</ol></div>
+        <button class="btn btn-sm btn-danger" onclick="delQuestion('${x.id}')" aria-label="Delete question ${i + 1}">${icon('trash', 'sm')}</button>
+      </div>`).join('')}
+      <div class="field" style="margin-top:20px">
+        <label for="bulk">Add questions</label>
+        <p class="help" style="margin:0 0 8px">One question per line: <code>Question | Option 1 | Option 2 | Option 3 | Option 4 | correct option number</code><br>
+        True/False: <code>Is plot registry mandatory? | True | False | 1</code></p>
+        <textarea id="bulk" rows="6" placeholder="In which city is Akshardham Associates based? | Kota | Jhalawar | Jaipur | Udaipur | 2"></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="addQuestions('${id}')">${icon('plus', 'sm')} Add questions</button>
+    </section>
+    ${form('modules', mod)}`);
+}
+
+async function addQuestions(moduleId) {
+  const { rows, bad } = parseQuestions(document.getElementById('bulk').value, moduleId);
+  if (bad.length) return toast(`Line ${bad.join(', ')} has the wrong format. Nothing was saved.`, 'err');
+  if (!rows.length) return;
+  const { error } = await sb.from('questions').insert(rows);
+  if (error) return toast(error.message, 'err');
+  toast(`${rows.length} question${rows.length === 1 ? '' : 's'} added`);
+  route();
+}
+
+async function delQuestion(id) {
+  if (!confirm('Delete this question? Past attempt records will be kept.')) return;
+  const { error } = await sb.from('questions').delete().eq('id', id);
+  if (error) return toast(error.message, 'err');
+  route();
+}
+
+if (typeof module === 'object') module.exports = { parseQuestions }; // node test.js
+else { addEventListener('hashchange', route); initTips(); boot(); }
+
+</script>
+<div style="position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:9999;background:#111827;color:#fff;font:600 12px/1 system-ui,sans-serif;padding:7px 12px;border-radius:999px;opacity:.88;pointer-events:none;white-space:nowrap">Demo · sample data · nothing is saved</div>
+</body>
+</html>

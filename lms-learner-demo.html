@@ -1,0 +1,1082 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Akshardham Academy Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+/* Akshardham Academy — design tokens (Trust & Authority, brand navy/blue/gold) */
+:root {
+  --navy: #14243A; --navy-2: #1C3150; --blue: #2457C5; --blue-600: #1D47A3; --blue-50: #EEF3FD;
+  --gold: #C5A15B; --gold-50: #FAF5EA;
+  --bg: #F5F7FA; --surface: #FFFFFF; --text: #1B2433; --muted: #5B6576;
+  --border: #E3E8EF; --border-strong: #CBD3DF;
+  --ok: #047857; --ok-50: #ECFDF5; --err: #B42318; --err-50: #FEF3F2; --warn: #B45309; --warn-50: #FFFBEB;
+  --r: 12px; --r-lg: 16px;
+  --sh-1: 0 1px 2px rgba(16,24,40,.05), 0 1px 3px rgba(16,24,40,.07);
+  --sh-2: 0 6px 16px rgba(16,24,40,.08);
+  --sh-3: 0 16px 40px rgba(20,36,58,.18);
+  --ease: cubic-bezier(.2,.8,.2,1); --dur: 200ms;
+  --font-head: 'Lexend', 'Noto Sans Devanagari', system-ui, sans-serif;
+  --font-body: 'Source Sans 3', 'Noto Sans Devanagari', system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 var(--font-body); min-height: 100dvh; }
+h1, h2, h3, h4 { font-family: var(--font-head); line-height: 1.25; margin: 0 0 8px; font-weight: 600; letter-spacing: -.01em; color: var(--navy); }
+h1 { font-size: clamp(22px, 4vw, 28px); } h2 { font-size: 20px; } h3 { font-size: 17px; }
+p { margin: 0 0 12px; }
+a { color: var(--blue); text-underline-offset: 3px; }
+.muted { color: var(--muted); } .small { font-size: 14px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: -999px; top: 8px; background: #fff; padding: 8px 12px; border-radius: 8px; z-index: 100; }
+.skip:focus { left: 8px; }
+:focus-visible { outline: 3px solid rgba(36,87,197,.45); outline-offset: 2px; }
+svg.i { width: 20px; height: 20px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+svg.i.sm { width: 16px; height: 16px; } svg.i.lg { width: 28px; height: 28px; }
+
+/* ---------- header ---------- */
+.top { position: sticky; top: 0; z-index: 20; background: var(--navy); color: #fff; }
+.top-in { max-width: 1240px; margin: 0 auto; padding: 8px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 60px; }
+.brand { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; font: 600 17px var(--font-head); }
+.brand b { color: var(--gold); font-weight: 600; }
+.logo { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, var(--gold), #A9843F); display: grid; place-items: center; color: var(--navy); font-weight: 700; }
+.user { display: flex; align-items: center; gap: 10px; font-size: 15px; }
+.user-name { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 560px) { .user-name { display: none; } }
+.avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--blue-50); color: var(--blue); display: grid; place-items: center; font: 600 14px var(--font-head); flex: none; }
+.avatar.lg { width: 56px; height: 56px; font-size: 20px; }
+.top .avatar { background: rgba(255,255,255,.14); color: #fff; }
+.icon-btn { width: 44px; height: 44px; border-radius: 10px; border: 0; background: transparent; color: inherit; display: grid; place-items: center; cursor: pointer; transition: background var(--dur) var(--ease); }
+.icon-btn:hover { background: rgba(255,255,255,.1); }
+
+main { max-width: 1040px; margin: 0 auto; padding: 24px 16px 72px; }
+
+/* ---------- surfaces ---------- */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 20px; box-shadow: var(--sh-1); margin-bottom: 16px; }
+@media (min-width: 768px) { .card { padding: 24px; } }
+.card.narrow { max-width: 560px; margin: 8px auto 16px; }
+.card-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.card-head h2 { margin: 0; display: flex; align-items: center; gap: 10px; }
+.hero { position: relative; overflow: hidden; background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 60%, #23406A 100%); color: #fff; border-radius: var(--r-lg); padding: 24px; margin-bottom: 16px; box-shadow: var(--sh-2); }
+@media (min-width: 768px) { .hero { padding: 32px; } }
+.hero::after { content: ""; position: absolute; right: -70px; top: -70px; width: 240px; height: 240px; border-radius: 50%; border: 30px solid rgba(197,161,91,.13); pointer-events: none; }
+.hero > * { position: relative; z-index: 1; }
+.hero h1, .hero h2 { color: #fff; } .hero .muted, .hero p { color: #C9D3E3; }
+.eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+.card .eyebrow { color: #8A6A2B; }
+
+/* ---------- buttons ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 18px; border-radius: 10px; border: 1px solid var(--border-strong); background: #fff; color: var(--text); font: 600 15px/1.2 var(--font-body); cursor: pointer; text-decoration: none; transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur), box-shadow var(--dur) var(--ease), transform 120ms var(--ease); touch-action: manipulation; }
+.btn:hover { border-color: var(--blue); color: var(--blue); }
+.btn:active { transform: scale(.98); }
+.btn-primary { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 1px 2px rgba(36,87,197,.3); }
+.btn-primary:hover { background: var(--blue-600); border-color: var(--blue-600); color: #fff; }
+.btn-gold { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+.btn-gold:hover { background: #D6B577; border-color: #D6B577; color: var(--navy); }
+.btn-danger { color: var(--err); border-color: #F4C7C3; }
+.btn-danger:hover { background: var(--err-50); border-color: var(--err); color: var(--err); }
+.btn-sm { min-height: 36px; padding: 6px 12px; font-size: 14px; }
+.btn-block { width: 100%; }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.btn-google { background: #fff; color: #1F1F1F; border-color: #DADCE0; width: 100%; min-height: 52px; font-size: 16px; }
+.btn-google:hover { background: #F8FAFF; color: #1F1F1F; border-color: #BFC5CE; box-shadow: var(--sh-1); }
+.btn-google svg { width: 20px; height: 20px; }
+.link { border: 0; background: none; padding: 0; color: var(--blue); cursor: pointer; font: inherit; text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- forms ---------- */
+.field { margin-bottom: 18px; }
+label, .label { display: block; font-weight: 600; font-size: 15px; margin-bottom: 6px; }
+.req { color: var(--err); }
+.help { font-size: 14px; color: var(--muted); margin-top: 6px; }
+input[type=text], input[type=tel], input[type=email], input[type=number], input[type=search], select, textarea { width: 100%; min-height: 46px; font: 16px var(--font-body); padding: 10px 12px; border: 1px solid var(--border-strong); border-radius: 10px; background: #fff; color: var(--text); transition: border-color var(--dur), box-shadow var(--dur); }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 4px rgba(36,87,197,.14); }
+textarea { min-height: 110px; resize: vertical; }
+.check { display: flex; align-items: flex-start; gap: 10px; font-weight: 500; cursor: pointer; margin: 0; }
+.check input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--blue); flex: none; }
+.grid-2 { display: grid; gap: 0 16px; }
+@media (min-width: 640px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+.form-error { color: var(--err); font-weight: 600; margin: 0 0 12px; }
+.form-error:empty { display: none; }
+
+/* option tiles (registration type + quiz answers) */
+.opt { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 12px; margin: 0 0 8px; cursor: pointer; font-weight: 500; background: #fff; transition: border-color var(--dur), background var(--dur); }
+.opt:hover { border-color: #9DB5EA; background: #FAFCFF; }
+.opt input { width: 20px; height: 20px; accent-color: var(--blue); flex: none; margin: 0; }
+.opt:has(input:checked) { border-color: var(--blue); background: var(--blue-50); }
+.opt:has(input:focus-visible) { outline: 3px solid rgba(36,87,197,.4); outline-offset: 2px; }
+.opt .opt-ico { width: 40px; height: 40px; border-radius: 10px; background: var(--gold-50); color: #8A6A2B; display: grid; place-items: center; flex: none; }
+.opt strong { display: block; } .opt span.small { color: var(--muted); font-weight: 400; }
+.opt-grid { display: grid; gap: 8px; }
+@media (min-width: 640px) { .opt-grid { grid-template-columns: 1fr 1fr; } .opt-grid .opt { margin: 0; } }
+
+/* ---------- badges & progress ---------- */
+.badge { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 99px; background: #EEF1F5; color: var(--muted); white-space: nowrap; }
+.badge svg.i { width: 14px; height: 14px; }
+.b-ok { background: var(--ok-50); color: var(--ok); } .b-blue { background: var(--blue-50); color: var(--blue); }
+.b-err { background: var(--err-50); color: var(--err); } .b-warn { background: var(--warn-50); color: var(--warn); }
+.b-gold { background: var(--gold-50); color: #7A5E22; }
+.hero .badge { background: rgba(255,255,255,.12); color: #fff; }
+.bar { height: 8px; background: #E7ECF3; border-radius: 99px; overflow: hidden; }
+.bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--blue), #4C7BE0); border-radius: inherit; transition: width 500ms var(--ease); }
+.hero .bar { background: rgba(255,255,255,.16); } .hero .bar > i { background: linear-gradient(90deg, var(--gold), #E2C68B); }
+.ring { width: 140px; height: 140px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto; }
+.ring > div { width: 112px; height: 112px; border-radius: 50%; background: #fff; display: grid; place-items: center; font: 700 30px var(--font-head); color: var(--navy); }
+
+/* ---------- selection steps ---------- */
+.steps { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 14px; }
+@media (min-width: 768px) { .steps { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
+.steps li { display: flex; gap: 12px; align-items: flex-start; }
+@media (min-width: 768px) { .steps li { flex-direction: column; } }
+.steps .n { width: 34px; height: 34px; border-radius: 50%; background: rgba(197,161,91,.2); color: var(--gold); display: grid; place-items: center; font: 600 15px var(--font-head); flex: none; }
+.steps strong { display: block; color: #fff; font-size: 15px; } .steps span { font-size: 14px; color: #C9D3E3; }
+
+/* ---------- chapter timeline ---------- */
+.chapters { list-style: none; margin: 0; padding: 0; }
+.chapter { position: relative; display: flex; gap: 14px; padding-bottom: 14px; }
+.chapter:not(:last-child)::before { content: ""; position: absolute; left: 21px; top: 46px; bottom: 2px; width: 2px; background: var(--border); }
+.chapter.passed:not(:last-child)::before { background: var(--ok); }
+.node { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; flex: none; background: #EEF1F5; color: #8792A3; border: 2px solid var(--border); position: relative; z-index: 1; }
+.passed .node { background: var(--ok); border-color: var(--ok); color: #fff; }
+.available .node { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 0 0 6px rgba(36,87,197,.14); }
+.chapter-body { flex: 1; min-width: 0; background: #fff; border: 1px solid var(--border); border-radius: var(--r); padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.available .chapter-body { border-color: #BFD0F3; box-shadow: var(--sh-2); }
+.locked .chapter-body { background: #FAFBFC; }
+.locked h3 { color: var(--muted); }
+.chapter h3 { margin: 0; }
+.chapter-meta { font-size: 14px; color: var(--muted); display: flex; gap: 6px 14px; flex-wrap: wrap; margin-top: 4px; }
+.chapter-meta span { display: inline-flex; align-items: center; gap: 4px; }
+
+/* ---------- lesson ---------- */
+.crumb { display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; text-decoration: none; margin-bottom: 12px; min-height: 44px; }
+.video { position: relative; aspect-ratio: 16 / 9; border-radius: var(--r); overflow: hidden; background: #0B1424; margin: 16px 0; }
+.video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0 16px; }
+
+/* ---------- quiz ---------- */
+.quiz-head { position: sticky; top: 60px; z-index: 5; background: #fff; padding: 12px 0; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+.quiz-head .row { justify-content: space-between; margin-bottom: 8px; font-weight: 600; }
+.q { border: 0; margin: 0 0 24px; padding: 0; min-width: 0; }
+.q legend { font-weight: 600; font-size: 17px; margin-bottom: 12px; padding: 0; display: flex; gap: 10px; }
+.qn { flex: none; width: 28px; height: 28px; border-radius: 8px; background: var(--blue-50); color: var(--blue); display: grid; place-items: center; font: 600 14px var(--font-head); }
+.result { text-align: center; padding: 8px 0; }
+.result h2 { margin-top: 16px; }
+.result .row { justify-content: center; }
+
+/* ---------- notices / empty ---------- */
+.notice { display: flex; gap: 10px; align-items: flex-start; border-radius: 12px; padding: 12px 14px; margin: 12px 0; font-size: 15px; background: var(--warn-50); color: var(--warn); }
+.notice.ok { background: var(--ok-50); color: var(--ok); } .notice.info { background: var(--blue-50); color: var(--blue-600); }
+.hero .notice.ok { background: rgba(4,120,87,.22); color: #D1FAE5; }
+.empty { text-align: center; padding: 32px 16px; color: var(--muted); }
+.empty svg.i { width: 40px; height: 40px; color: #9AA6B8; margin-bottom: 8px; }
+
+/* ---------- auth ---------- */
+.auth { min-height: calc(100dvh - 60px); display: grid; align-items: center; padding: 24px 16px; }
+.auth-grid { max-width: 980px; margin: 0 auto; display: grid; gap: 16px; width: 100%; }
+@media (min-width: 880px) { .auth-grid { grid-template-columns: 1.15fr 1fr; gap: 20px; } }
+.auth .hero, .auth .card { margin: 0; display: flex; flex-direction: column; justify-content: center; }
+@media (min-width: 880px) { .auth .hero, .auth .card { padding: 40px; } }
+.perks { list-style: none; padding: 0; margin: 20px 0 0; display: grid; gap: 14px; }
+.perks li { display: flex; gap: 12px; align-items: flex-start; color: #DCE4F0; }
+.perks svg.i { color: var(--gold); margin-top: 2px; }
+.auth .card .logo { width: 48px; height: 48px; font-size: 22px; margin-bottom: 16px; }
+
+/* ---------- tables ---------- */
+.table-wrap { overflow-x: auto; margin: 0 -20px; }
+@media (min-width: 768px) { .table-wrap { margin: 0 -24px; } }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+th { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); background: #F8FAFC; white-space: nowrap; }
+tbody tr { transition: background var(--dur); } tbody tr:hover { background: #F8FAFD; }
+tbody tr:last-child td { border-bottom: 0; }
+.sub { font-size: 13px; color: var(--muted); }
+.person { display: flex; align-items: center; gap: 10px; min-width: 200px; }
+.person a { font-weight: 600; text-decoration: none; }
+.person a:hover { text-decoration: underline; }
+.num { font-variant-numeric: tabular-nums; }
+.mini-bar { display: flex; align-items: center; gap: 8px; min-width: 130px; } .mini-bar .bar { flex: 1; height: 6px; }
+select.status { min-height: 36px; padding: 4px 8px; font-size: 14px; width: auto; }
+
+/* ---------- admin layout ---------- */
+.admin { max-width: 1240px; margin: 0 auto; }
+@media (min-width: 1024px) { .admin { display: grid; grid-template-columns: 236px 1fr; } }
+.side { padding: 12px 16px 0; }
+@media (min-width: 1024px) { .side { position: sticky; top: 60px; height: calc(100dvh - 60px); padding: 24px 12px; border-right: 1px solid var(--border); background: #fff; } }
+.side nav { display: flex; gap: 6px; overflow-x: auto; }
+@media (min-width: 1024px) { .side nav { flex-direction: column; } }
+.side .label { display: none; font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); padding: 0 12px; margin: 0 0 8px; }
+@media (min-width: 1024px) { .side .label { display: block; } }
+.nav-item { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 8px 12px; border-radius: 10px; color: var(--muted); text-decoration: none; font-weight: 600; white-space: nowrap; transition: background var(--dur), color var(--dur); }
+.nav-item:hover { background: #EEF1F6; color: var(--text); }
+.nav-item.on { background: var(--blue-50); color: var(--blue); }
+.admin main { max-width: none; margin: 0; padding: 20px 16px 72px; min-width: 0; }
+@media (min-width: 1024px) { .admin main { padding: 32px; } }
+.page-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+.page-head h1 { margin: 0 0 4px; } .page-head p { margin: 0; }
+.stats { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); margin-bottom: 16px; }
+@media (min-width: 900px) { .stats { grid-template-columns: repeat(4, 1fr); } }
+.stat { background: #fff; border: 1px solid var(--border); border-radius: var(--r); padding: 16px; box-shadow: var(--sh-1); display: flex; gap: 12px; align-items: center; min-width: 0; }
+.stat .ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--blue-50); color: var(--blue); flex: none; }
+.stat .ico.ok { background: var(--ok-50); color: var(--ok); } .stat .ico.gold { background: var(--gold-50); color: #8A6A2B; }
+.stat .val { font: 700 24px var(--font-head); color: var(--navy); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.stat .lbl { font-size: 13px; color: var(--muted); }
+.toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+.toolbar > * { flex: 1 1 150px; }
+.search { position: relative; flex: 2 1 240px; }
+.search svg.i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+.search input { padding-left: 40px; }
+details.card > summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 10px; font-weight: 600; min-height: 32px; }
+details.card > summary::-webkit-details-marker { display: none; }
+details.card[open] > summary { margin-bottom: 12px; }
+.attempt { border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 8px; }
+.attempt > summary { cursor: pointer; padding: 12px 14px; display: flex; gap: 8px 12px; flex-wrap: wrap; align-items: center; list-style: none; }
+.attempt > summary::-webkit-details-marker { display: none; }
+.attempt-body { padding: 0 14px 14px; border-top: 1px solid var(--border); }
+.qb-item { border: 1px solid var(--border); border-radius: var(--r); padding: 12px 14px; margin-bottom: 8px; display: flex; gap: 12px; justify-content: space-between; align-items: flex-start; }
+.qb-item ol { margin: 6px 0 0; padding-left: 20px; font-size: 15px; list-style: upper-alpha; }
+.ok-t { color: var(--ok); font-weight: 600; } .err-t { color: var(--err); font-weight: 600; }
+code { background: #F1F4F9; padding: 2px 6px; border-radius: 6px; font-size: 14px; word-break: break-word; }
+
+/* ---------- dashboard charts ---------- */
+.chart-grid { display: grid; gap: 0 16px; }
+@media (min-width: 1100px) { .chart-grid { grid-template-columns: 1fr 1fr; } }
+.stat .sub { margin-top: 2px; }
+.seg { display: inline-flex; background: #E9EDF3; border-radius: 10px; padding: 3px; gap: 2px; flex-wrap: wrap; }
+.seg button { border: 0; background: transparent; font: 600 14px var(--font-body); color: var(--muted); padding: 8px 12px; min-height: 38px; border-radius: 8px; cursor: pointer; transition: background var(--dur), color var(--dur); }
+.seg button:hover { color: var(--text); }
+.seg button.on { background: #fff; color: var(--navy); box-shadow: var(--sh-1); }
+.funnel { display: grid; gap: 10px; }
+.f-row { display: grid; grid-template-columns: minmax(96px, 136px) 1fr auto; gap: 12px; align-items: center; padding: 4px 0; border-radius: 8px; cursor: default; }
+.f-lbl { font-size: 14px; color: var(--text); }
+.f-track { height: 20px; }
+.f-track i { display: block; height: 100%; min-width: 2px; background: var(--blue); border-radius: 0 4px 4px 0; transition: width 500ms var(--ease); }
+.f-row:hover .f-track i, .f-row:focus-visible .f-track i { background: var(--blue-600); }
+.f-val { font-weight: 700; min-width: 64px; text-align: right; }
+.cols { display: flex; gap: 8px; height: 180px; }
+.cols-y { display: flex; flex-direction: column; justify-content: space-between; font-size: 12px; color: var(--muted); padding-bottom: 1px; }
+.cols-plot { flex: 1; display: flex; align-items: flex-end; gap: 2px; border-bottom: 1px solid var(--border); background: linear-gradient(var(--border), var(--border)) top / 100% 1px no-repeat; }
+.col { flex: 1; height: 100%; display: flex; align-items: flex-end; justify-content: center; cursor: default; }
+.col i { display: block; width: 100%; max-width: 24px; background: var(--blue); border-radius: 4px 4px 0 0; transition: height 500ms var(--ease); }
+.col:hover i, .col:focus-visible i { background: var(--blue-600); }
+.cols-x { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin: 6px 0 0 28px; }
+.stack { display: flex; gap: 2px; height: 20px; border-radius: 4px; overflow: hidden; }
+.stack i { display: block; min-width: 4px; cursor: default; }
+.legend { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; }
+.legend li { display: flex; align-items: center; gap: 8px; font-size: 15px; }
+.legend b { margin-left: auto; } .legend .sub { min-width: 40px; text-align: right; }
+.sw { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.feed { list-style: none; margin: 0; padding: 0; }
+.feed li { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.feed li:last-child { border-bottom: 0; }
+.feed a { text-decoration: none; } .feed a:hover { text-decoration: underline; }
+#tip { position: absolute; z-index: 60; transform: translate(-50%, -100%); background: var(--navy); color: #fff; font-size: 13px; font-weight: 600; padding: 6px 10px; border-radius: 8px; box-shadow: var(--sh-2); pointer-events: none; opacity: 0; transition: opacity 120ms; white-space: nowrap; }
+#tip.on { opacity: 1; }
+
+/* ---------- learner dashboard ---------- */
+.dash-hero { display: grid; gap: 20px; align-items: center; }
+@media (min-width: 640px) { .dash-hero { grid-template-columns: 1fr auto; } }
+.dash-hero p { margin-bottom: 16px; }
+.hero .ring > div { background: var(--navy-2); color: #fff; }
+.seg a { display: inline-flex; align-items: center; gap: 6px; font: 600 14px var(--font-body); color: var(--muted); padding: 8px 12px; min-height: 38px; border-radius: 8px; text-decoration: none; transition: background var(--dur), color var(--dur); }
+.seg a:hover { color: var(--text); }
+.seg a.on { background: #fff; color: var(--navy); box-shadow: var(--sh-1); }
+.score-track { position: relative; background: #EEF1F5; border-radius: 0 4px 4px 0; }
+.pass-mark { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--navy); border-radius: 1px; }
+.chapters > li.empty { display: block; }
+
+/* ---------- celebrations ---------- */
+.welcome { text-align: center; border-color: #E8D9B5; background: linear-gradient(180deg, var(--gold-50), #fff 70%); }
+.welcome-ico { width: 64px; height: 64px; border-radius: 50%; background: var(--gold); color: var(--navy); display: grid; place-items: center; margin: 0 auto 12px; box-shadow: 0 0 0 8px rgba(197,161,91,.18); }
+.welcome .row { justify-content: center; }
+.welcome ol { text-align: left; max-width: 420px; margin: 12px auto 20px; padding-left: 20px; }
+.confetti { position: fixed; inset: 0; pointer-events: none; z-index: 90; overflow: hidden; }
+.confetti i { position: absolute; top: -14px; width: 8px; height: 12px; border-radius: 2px; animation-name: fall; animation-timing-function: linear; animation-fill-mode: forwards; }
+@keyframes fall { to { transform: translateY(110vh) rotate(600deg); } }
+
+/* ---------- toast / skeleton / motion ---------- */
+#toasts { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 100; display: grid; gap: 8px; width: min(420px, calc(100% - 32px)); }
+.toast { display: flex; gap: 10px; align-items: center; background: var(--navy); color: #fff; padding: 12px 16px; border-radius: 12px; box-shadow: var(--sh-3); font-weight: 500; animation: rise 220ms var(--ease); }
+.toast.err { background: var(--err); }
+.sk { background: linear-gradient(90deg, #E7EBF1 25%, #F2F5F8 50%, #E7EBF1 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite; border-radius: var(--r-lg); }
+@keyframes shimmer { to { background-position: -200% 0; } }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+.fade-in { animation: rise 260ms var(--ease) both; }
+.stagger > * { animation: rise 280ms var(--ease) both; }
+.stagger > *:nth-child(2) { animation-delay: 40ms; } .stagger > *:nth-child(3) { animation-delay: 80ms; }
+.stagger > *:nth-child(4) { animation-delay: 120ms; } .stagger > *:nth-child(5) { animation-delay: 160ms; }
+.stagger > *:nth-child(n+6) { animation-delay: 200ms; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+</style>
+  <meta name="theme-color" content="#14243A">
+</head>
+<body>
+  <div id="app"><header class="top"><div class="top-in"></div></header>
+    <main aria-busy="true"><div class="sk" style="height:180px;margin-bottom:16px"></div><div class="sk" style="height:320px"></div></main></div>
+  <script>window.DEMO_ROLE='learner';
+// DEMO MODE: in-browser stand-in for Supabase. Sample data only; nothing leaves the browser.
+// The RPCs mirror schema.sql: unlock rule, new paper on retry, answer keys never returned to learners.
+(function () {
+  const ROLE = window.DEMO_ROLE || 'learner';
+  let n = 0;
+  const uuid = () => { n++; return ('00000000-0000-4000-8000-' + String(n).padStart(12, '0')); };
+  const now = () => new Date().toISOString();
+  const ago = d => new Date(Date.now() - d * 864e5).toISOString();
+  const clone = o => JSON.parse(JSON.stringify(o));
+
+  // ---------- seed ----------
+  const db = { courses: [], modules: [], questions: [], profiles: [], enrollments: [], attempts: [], employee_invites: [] };
+  const C1 = uuid(), C2 = uuid(), C3 = uuid();
+  db.courses.push(
+    { id: C1, title: 'Sales Executive Foundation', category: 'Sales Executive', audience: 'candidate', description: 'Plot sales basics: customer needs, site visits, closing.', published: true, created_at: ago(30) },
+    { id: C2, title: 'Agent Onboarding', category: 'Channel Partner', audience: 'agent', description: 'How to work with us as a property agent.', published: true, created_at: ago(20) },
+    { id: C3, title: 'Telecaller Script', category: 'Telecaller', audience: 'employee', description: 'Call opening, rapport and next step.', published: true, created_at: ago(10) });
+  const chapters = [
+    ['Company and projects', 'Who we are and the colonies we sell.'],
+    ['Understanding customer needs', 'Budget, location, plot size: asking the right questions.'],
+    ['Running a site visit', 'Before, during and after the visit.'],
+    ['Handling objections', 'Price, timing and trust objections.'],
+    ['Closing and booking', 'Token, documents and booking form.'],
+  ];
+  const QBANK = [
+    ['What should you confirm first with a new customer?', ['Budget and location', 'Their favourite colour', 'Office timings', 'Nothing'], 0],
+    ['A customer says "price is high". Best first step?', ['End the call', 'Understand what they compare it with', 'Offer a discount immediately', 'Argue'], 1],
+    ['When should the next follow-up date be set?', ['Never', 'Next month', 'At the end of every call', 'Only after booking'], 2],
+    ['What is a site visit for?', ['Show the plot and build trust', 'Collect cash only', 'Skip the meeting', 'Nothing'], 0],
+    ['Which detail helps most in rapport?', ['Their village or work', 'The weather only', 'Your salary', 'None'], 0],
+    ['What does "token" mean in a booking?', ['A gift', 'An advance that holds the plot', 'A lottery ticket', 'A discount'], 1],
+  ];
+  const mods = {};
+  chapters.forEach(([t, d], i) => {
+    const id = uuid(); mods[i] = id;
+    db.modules.push({ id, course_id: C1, seq: i + 1, title: t, description: d, videos: 'https://youtu.be/DEMOxVIDEO' + (i + 1), pass_pct: 80, questions_per_test: 3, published: true, created_at: ago(30) });
+    QBANK.forEach(([q, o, c]) => db.questions.push({ id: uuid(), module_id: id, text: q, options: o, correct: c, created_at: ago(30) }));
+  });
+  [C2, C3].forEach(cid => ['Introduction', 'Process', 'Rules'].forEach((t, i) => {
+    const id = uuid(); db.modules.push({ id, course_id: cid, seq: i + 1, title: t, description: '', videos: '', pass_pct: 80, questions_per_test: 3, published: true, created_at: ago(10) });
+    QBANK.forEach(([q, o, c]) => db.questions.push({ id: uuid(), module_id: id, text: q, options: o, correct: c, created_at: ago(10) }));
+  }));
+
+  const ME = uuid(), ADMIN = uuid();
+  const people = [
+    [ME, 'Rahul Verma', '9876500101', 'candidate', 'active', 'rahul.demo@example.com', 4],
+    [uuid(), 'Priya Sharma', '9876500102', 'candidate', 'shortlisted', 'priya.demo@example.com', 0],
+    [uuid(), 'Mohit Jain', '9876500103', 'candidate', 'active', 'mohit.demo@example.com', 2],
+    [uuid(), 'Kavita Meena', '9876500104', 'agent', 'active', 'kavita.demo@example.com', 8],
+    [uuid(), 'Deepak Singh', '9876500105', 'employee', 'active', 'deepak.demo@example.com', 6],
+    [uuid(), 'Anjali Gupta', '9876500106', 'candidate', 'rejected', 'anjali.demo@example.com', 12],
+  ];
+  people.forEach(([id, name, phone, type, status, email, d]) => db.profiles.push({ id, email, full_name: name, phone, user_type: type, role: 'learner', status, notes: '', created_at: ago(d + 3) }));
+  db.profiles.push({ id: ADMIN, email: 'admin.demo@example.com', full_name: 'Demo Admin', phone: '9876500100', user_type: 'employee', role: 'admin', status: 'active', notes: '', created_at: ago(40) });
+  const courseOf = { candidate: C1, agent: C2, employee: C3 };
+  people.forEach(([id, , , type]) => db.enrollments.push({ user_id: id, course_id: courseOf[type], created_at: ago(5) }));
+
+  // past attempts: [user index, module index, passed]
+  const att = (uid, mid, passed, d) => {
+    const qs = db.questions.filter(q => q.module_id === mid).slice(0, 3);
+    const score = passed ? 3 : 1;
+    db.attempts.push({ id: uuid(), user_id: uid, module_id: mid, question_ids: qs.map(q => q.id),
+      detail: qs.map((q, i) => ({ question: q.text, options: q.options, correct: q.correct, chosen: passed || i === 0 ? q.correct : (q.correct + 1) % q.options.length })),
+      score, total: 3, pct: passed ? 100 : 33.33, passed, started_at: ago(d), submitted_at: ago(d) });
+  };
+  att(ME, mods[0], false, 3); att(ME, mods[0], true, 3); att(ME, mods[1], true, 2);
+  const pid = i => people[i][0];
+  [0, 1, 2, 3, 4].forEach(i => att(pid(1), mods[i], true, 1));      // Priya: all clear
+  att(pid(2), mods[0], true, 1); att(pid(2), mods[1], false, 1);     // Mohit
+  att(pid(5), mods[0], false, 6);                                    // Anjali
+  db.employee_invites.push({ email: 'new.employee@example.com', full_name: 'Sanjay Kumar', phone: '9876500107', course_ids: [C3], created_at: ago(1) });
+
+  // ---------- auth ----------
+  let uid = ROLE === 'admin' ? ADMIN : ME;
+  let signedIn = true;
+  const user = () => ({ id: uid, email: (db.profiles.find(p => p.id === uid) || {}).email });
+  const isAdmin = () => !!db.profiles.find(p => p.id === uid && p.role === 'admin' && p.status !== 'inactive');
+
+  // ---------- RPCs (same rules as schema.sql) ----------
+  const passedMod = (m, u) => db.attempts.some(a => a.module_id === m && a.user_id === u && a.passed);
+  function unlocked(mid) {
+    const m = db.modules.find(x => x.id === mid); if (!m || !m.published) return false;
+    const c = db.courses.find(x => x.id === m.course_id && x.published); if (!c) return false;
+    if (!db.enrollments.some(e => e.course_id === m.course_id && e.user_id === uid)) return false;
+    const p = db.profiles.find(x => x.id === uid); if (!p || p.status === 'inactive') return false;
+    return !db.modules.some(prev => prev.course_id === m.course_id && prev.published && prev.seq < m.seq && !passedMod(prev.id, uid));
+  }
+  const rpc = {
+    claim_invite: () => false,
+    register: ({ p_name, p_phone, p_type, p_course }) => {
+      db.profiles.push({ id: uid, email: user().email, full_name: p_name, phone: p_phone, user_type: p_type, role: 'learner', status: 'active', notes: '', created_at: now() });
+      db.enrollments.push({ user_id: uid, course_id: p_course, created_at: now() });
+      return null;
+    },
+    my_modules: ({ p_course }) => db.modules.filter(m => m.course_id === p_course && m.published).sort((a, b) => a.seq - b.seq).map(m => {
+      const mine = db.attempts.filter(a => a.module_id === m.id && a.user_id === uid);
+      const ok = unlocked(m.id), passed = mine.some(a => a.passed);
+      return { id: m.id, seq: m.seq, title: m.title, description: m.description, videos: ok ? m.videos : null, pass_pct: m.pass_pct,
+        state: passed ? 'passed' : ok ? 'available' : 'locked', best_pct: mine.length ? Math.max(...mine.map(a => +a.pct || 0)) : null,
+        attempt_count: mine.filter(a => a.submitted_at).length };
+    }),
+    my_attempts: () => db.attempts.filter(a => a.user_id === uid && a.submitted_at).sort((a, b) => b.submitted_at.localeCompare(a.submitted_at)).map(a => {
+      const m = db.modules.find(x => x.id === a.module_id);
+      return { id: a.id, course_id: m.course_id, module_id: a.module_id, chapter: m.title, score: a.score, total: a.total, pct: a.pct, passed: a.passed, submitted_at: a.submitted_at };
+    }),
+    start_attempt: ({ p_module }) => {
+      if (!unlocked(p_module)) throw new Error('Module locked');
+      let a = db.attempts.find(x => x.user_id === uid && x.module_id === p_module && !x.submitted_at);
+      if (!a) {
+        const last = db.attempts.filter(x => x.user_id === uid && x.module_id === p_module && x.submitted_at).sort((x, y) => y.submitted_at.localeCompare(x.submitted_at))[0];
+        const prev = last ? last.question_ids : [];
+        const m = db.modules.find(x => x.id === p_module);
+        const pool = db.questions.filter(q => q.module_id === p_module).map(q => ({ q, r: Math.random() + (prev.includes(q.id) ? 1 : 0) })).sort((x, y) => x.r - y.r);
+        a = { id: uuid(), user_id: uid, module_id: p_module, question_ids: pool.slice(0, m.questions_per_test).map(x => x.q.id), started_at: now(), submitted_at: null };
+        db.attempts.push(a);
+      }
+      return { attempt_id: a.id, questions: a.question_ids.map(id => { const q = db.questions.find(x => x.id === id); return { id: q.id, text: q.text, options: q.options }; }) };
+    },
+    submit_attempt: ({ p_attempt, p_answers }) => {
+      const a = db.attempts.find(x => x.id === p_attempt && x.user_id === uid && !x.submitted_at);
+      if (!a) throw new Error('Attempt not found or already submitted');
+      const qs = a.question_ids.map(id => db.questions.find(x => x.id === id));
+      const score = qs.filter(q => +p_answers[q.id] === q.correct).length, total = qs.length;
+      const pass = db.modules.find(m => m.id === a.module_id).pass_pct, pct = Math.round(10000 * score / Math.max(total, 1)) / 100;
+      Object.assign(a, { detail: qs.map(q => ({ question: q.text, options: q.options, correct: q.correct, chosen: +p_answers[q.id] })), score, total, pct, passed: pct >= pass, submitted_at: now() });
+      return { score, total, pct, passed: pct >= pass, pass_pct: pass };
+    },
+    admin_users: () => !isAdmin() ? [] : db.profiles.slice().sort((a, b) => b.created_at.localeCompare(a.created_at)).map(p => {
+      const cids = db.enrollments.filter(e => e.user_id === p.id).map(e => e.course_id);
+      const mine = db.attempts.filter(a => a.user_id === p.id);
+      return { id: p.id, full_name: p.full_name, email: p.email, phone: p.phone, user_type: p.user_type, status: p.status, notes: p.notes, created_at: p.created_at,
+        courses: cids.map(c => db.courses.find(x => x.id === c).title).join(', ') || null,
+        modules_total: db.modules.filter(m => m.published && cids.includes(m.course_id)).length,
+        modules_passed: new Set(mine.filter(a => a.passed).map(a => a.module_id)).size,
+        attempts: mine.filter(a => a.submitted_at).length,
+        last_activity: mine.map(a => a.submitted_at || a.started_at).sort().pop() || null };
+    }),
+  };
+
+  // ---------- tiny PostgREST-style query builder ----------
+  const FK = { courses: 'course_id', profiles: 'user_id', modules: 'module_id' };
+  function splitTop(s) { const out = []; let d = 0, cur = ''; for (const ch of s) { if (ch === '(') d++; if (ch === ')') d--; if (ch === ',' && !d) { out.push(cur.trim()); cur = ''; } else cur += ch; } if (cur.trim()) out.push(cur.trim()); return out; }
+  function project(table, row, sel) {
+    if (!sel || sel === '*') return clone(row);
+    const o = {};
+    splitTop(sel).forEach(part => {
+      const m = part.match(/^(\w+)\((.*)\)$/);
+      if (part === '*') Object.assign(o, clone(row));
+      else if (m) {
+        const [, rel, inner] = m;
+        if (FK[rel] && row[FK[rel]] !== undefined) { const r = db[rel].find(x => x.id === row[FK[rel]]); o[rel] = r ? project(rel, r, inner) : null; }
+        else { const back = FK[table]; const rows = db[rel].filter(x => x[back] === row.id); o[rel] = inner === 'count' ? [{ count: rows.length }] : rows.map(r => project(rel, r, inner)); }
+      } else o[part] = row[part] === undefined ? null : clone(row[part]);
+    });
+    return o;
+  }
+  function from(table) {
+    const st = { op: 'select', sel: '*', filters: [], orders: [], one: null, payload: null, ret: false };
+    const q = {
+      select(s) { if (st.op === 'select') st.sel = s || '*'; else { st.ret = true; st.sel = s || '*'; } return q; },
+      eq(c, v) { st.filters.push(r => r[c] === v); return q; },
+      neq(c, v) { st.filters.push(r => r[c] !== v); return q; },
+      in(c, arr) { st.filters.push(r => arr.includes(r[c])); return q; },
+      not(c, op, v) { st.filters.push(r => op === 'is' && v === null ? r[c] != null : r[c] !== v); return q; },
+      order(c, o) { st.orders.push([c, !(o && o.ascending === false)]); return q; },
+      limit() { return q; },
+      single() { st.one = 'single'; return q; }, maybeSingle() { st.one = 'maybe'; return q; },
+      insert(p) { st.op = 'insert'; st.payload = p; return q; },
+      update(p) { st.op = 'update'; st.payload = p; return q; },
+      delete() { st.op = 'delete'; return q; },
+      then(res, rej) { return Promise.resolve().then(run).then(res, rej); },
+    };
+    function visible(r) { // row level security, as in schema.sql
+      if (isAdmin()) return true;
+      if (table === 'courses') return r.published;
+      if (table === 'profiles') return r.id === uid;
+      if (table === 'enrollments') return r.user_id === uid;
+      return false;
+    }
+    function run() {
+      try {
+        const rows = db[table];
+        if (st.op === 'insert') {
+          if (!isAdmin()) throw new Error('new row violates row-level security policy');
+          const list = (Array.isArray(st.payload) ? st.payload : [st.payload]).map(r => Object.assign({ id: uuid(), created_at: now() }, clone(r)));
+          rows.push(...list);
+          return { data: st.ret ? (st.one ? project(table, list[0], st.sel) : list.map(r => project(table, r, st.sel))) : null, error: null };
+        }
+        let hit = rows.filter(r => visible(r) && st.filters.every(f => f(r)));
+        if (st.op === 'update') { if (!isAdmin()) hit = []; hit.forEach(r => Object.assign(r, clone(st.payload))); }
+        if (st.op === 'delete') { if (!isAdmin()) hit = []; db[table] = rows.filter(r => !hit.includes(r)); return { data: null, error: null }; }
+        st.orders.slice().reverse().forEach(([c, asc]) => hit = hit.slice().sort((a, b) => (a[c] > b[c] ? 1 : a[c] < b[c] ? -1 : 0) * (asc ? 1 : -1)));
+        const out = hit.map(r => project(table, r, st.sel));
+        if (st.one === 'single') return out.length === 1 ? { data: out[0], error: null } : { data: null, error: { message: 'Row not found' } };
+        if (st.one === 'maybe') return { data: out[0] || null, error: null };
+        return { data: out, error: null };
+      } catch (e) { return { data: null, error: { message: e.message } }; }
+    }
+    return q;
+  }
+
+  const client = {
+    auth: {
+      getSession: () => Promise.resolve({ data: { session: signedIn ? { user: user() } : null } }),
+      signInWithOAuth: () => { signedIn = true; setTimeout(() => (window.render || window.boot)(), 50); return Promise.resolve({}); },
+      signOut: () => { signedIn = false; return Promise.resolve({}); },
+      onAuthStateChange: () => ({ data: { subscription: { unsubscribe() {} } } }),
+    },
+    from,
+    rpc: (name, args) => new Promise(r => setTimeout(() => {
+      try { if (!rpc[name]) throw new Error('Unknown function ' + name); r({ data: clone(rpc[name](args || {})), error: null }); }
+      catch (e) { r({ data: null, error: { message: e.message } }); }
+    }, name === 'submit_attempt' ? 500 : 150)),
+  };
+  window.supabase = { createClient: () => client };
+})();
+
+</script>
+  <script>
+// ===== Fill these two from Supabase → Project Settings → API =====
+const SUPABASE_URL = 'https://demo.invalid';
+const SUPABASE_ANON_KEY = 'demo';
+// ==================================================================
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { flowType: 'pkce' } });
+const $app = document.getElementById('app');
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const initials = name => String(name || '?').trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+
+// Lucide icon paths (MIT)
+const ICONS = {
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  lock: '<rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  play: '<polygon points="6 3 20 12 6 21 6 3"/>',
+  left: '<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>',
+  right: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+  logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  userPlus: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/>',
+  layers: '<path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>',
+  download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>',
+  search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  plus: '<path d="M5 12h14"/><path d="M12 5v14"/>',
+  trash: '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>',
+  award: '<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>',
+  retry: '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',
+  external: '<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+  alert: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+  x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  cap: '<path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>',
+  shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+  clipboard: '<rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
+  target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  video: '<path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/>',
+  briefcase: '<path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/>',
+  handshake: '<path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/>',
+  book: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  chart: '<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
+  funnel: '<path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"/>',
+  activity: '<path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/>',
+  pie: '<path d="M21 12c.552 0 1.005-.449.95-.998a10 10 0 0 0-8.953-8.951c-.55-.055-.998.398-.998.95v8a1 1 0 0 0 1 1z"/><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/>',
+  whatsapp: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+  phone: '<path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/>',
+  link: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+  save: '<path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/>',
+};
+const icon = (name, cls = '') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`;
+
+const GOOGLE_G = `<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>`;
+
+// raw: html already contains its own <main> (admin layout)
+function show(html, name, raw = false) {
+  $app.innerHTML = `
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="top"><div class="top-in">
+      <a class="brand" href="#/"><span class="logo">A</span><span>Akshardham <b>Academy</b></span></a>
+      ${name ? `<div class="user">
+        <span class="avatar" aria-hidden="true">${esc(initials(name))}</span>
+        <span class="user-name">${esc(name)}</span>
+        <button class="icon-btn" onclick="logout()" aria-label="Logout" title="Logout">${icon('logout')}</button>
+      </div>` : ''}
+    </div></header>
+    ${raw ? html : `<main id="main" class="fade-in">${html}</main>`}`;
+  scrollTo(0, 0);
+}
+
+function toast(msg, type = '') {
+  let box = document.getElementById('toasts');
+  if (!box) {
+    box = Object.assign(document.createElement('div'), { id: 'toasts' });
+    box.setAttribute('aria-live', 'polite');
+    document.body.append(box);
+  }
+  const t = Object.assign(document.createElement('div'), { className: `toast ${type}` });
+  t.innerHTML = `${icon(type === 'err' ? 'alert' : 'check')}<span>${esc(msg)}</span>`;
+  box.append(t);
+  setTimeout(() => t.remove(), type === 'err' ? 6000 : 3500);
+}
+
+function confetti() {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const colors = ['#2457C5', '#C5A15B', '#0E9384', '#C27C0E'];
+  const box = Object.assign(document.createElement('div'), { className: 'confetti' });
+  box.setAttribute('aria-hidden', 'true');
+  for (let i = 0; i < 70; i++) {
+    const p = document.createElement('i');
+    p.style.cssText = `left:${Math.random() * 100}%;background:${colors[i % 4]};animation-delay:${Math.random() * 0.7}s;animation-duration:${2.2 + Math.random() * 1.5}s`;
+    box.append(p);
+  }
+  document.body.append(box);
+  setTimeout(() => box.remove(), 4500);
+}
+
+// one shared tooltip for every [data-tip] mark (hover or keyboard focus)
+function initTips() {
+  const tip = Object.assign(document.createElement('div'), { id: 'tip' });
+  tip.setAttribute('role', 'tooltip');
+  document.body.append(tip);
+  const on = e => {
+    const el = e.target.closest?.('[data-tip]');
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    tip.textContent = el.dataset.tip;
+    tip.style.left = `${Math.min(innerWidth - 90, Math.max(90, r.left + r.width / 2))}px`;
+    tip.style.top = `${r.top + scrollY - 8}px`;
+    tip.classList.add('on');
+  };
+  const off = () => tip.classList.remove('on');
+  addEventListener('pointerover', on); addEventListener('focusin', on);
+  addEventListener('pointerout', off); addEventListener('focusout', off);
+}
+
+function fail(err) {
+  show(`<div class="card narrow empty">
+    ${icon('alert')}
+    <h2>Something went wrong</h2>
+    <p>${esc(err?.message || err)}</p>
+    <button class="btn btn-primary" onclick="location.reload()">${icon('retry')} Try again</button>
+  </div>`);
+}
+
+async function getSessionProfile() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return {};
+  const { data: profile, error } = await sb.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
+  if (error) throw error;
+  return { user: session.user, profile };
+}
+
+function viewLogin(admin = false) {
+  const perks = admin
+    ? [['users', 'Every learner\'s progress and test results in one place'], ['layers', 'Manage trainings, chapters and the question bank'], ['download', 'Build shortlists and export to CSV']]
+    : [['video', 'Chapter-by-chapter training videos'], ['clipboard', 'A short test after each chapter, pass at 80%'], ['award', 'Clear every chapter to move ahead']];
+  show(`
+    <div class="auth"><div class="auth-grid">
+      <section class="hero">
+        <span class="eyebrow">${icon(admin ? 'shield' : 'cap', 'sm')} Akshardham Associates</span>
+        <h1>${admin ? 'Admin Panel' : 'Training & Assessment Portal'}</h1>
+        <p>${admin ? 'Run training, tests and selection from one place.' : 'Learn, take tests and track your own progress.'}</p>
+        <ul class="perks">${perks.map(([i, t]) => `<li>${icon(i)}<span>${t}</span></li>`).join('')}</ul>
+      </section>
+      <section class="card">
+        <span class="logo" aria-hidden="true">A</span>
+        <h2>Sign in</h2>
+        <p class="muted">Sign in with your Google (Gmail) account in one click. No password to remember.</p>
+        <button class="btn btn-google" onclick="login(this)">${GOOGLE_G} Continue with Google</button>
+        <p class="help" style="margin-top:16px">By signing in you agree to our <a href="privacy.html">Privacy Policy</a>.</p>
+      </section>
+    </div></div>`, null, true);
+}
+
+function login(btn) {
+  if (btn) { btn.disabled = true; btn.lastChild.textContent = ' Opening Google…'; }
+  sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin + location.pathname } });
+}
+
+async function logout() {
+  await sb.auth.signOut();
+  location.hash = '';
+  location.reload();
+}
+
+</script>
+  <script>
+let me; // current profile
+let justJoined = false; // show the welcome card once, right after registration / first employee login
+
+const ytId = url => (url.match(/(?:youtu\.be\/|v=|shorts\/|embed\/|live\/)([\w-]{11})/) || [])[1];
+const firstName = () => (me.full_name || '').split(/\s+/)[0];
+// start_attempt's "no questions" message was Hinglish in early schema versions
+const friendly = msg => /questions nahi|no questions/i.test(msg) ? 'This chapter has no test questions yet. Please contact the admin.' : msg;
+
+async function render() {
+  try {
+    const { user, profile } = await getSessionProfile();
+    if (!user) return viewLogin();
+    if (!profile) {
+      const { data: claimed, error } = await sb.rpc('claim_invite'); // employee pre-added by admin?
+      if (error) throw error;
+      if (claimed) { justJoined = true; return render(); }
+      return viewRegister(user.email);
+    }
+    me = profile;
+    if (me.status === 'inactive') return show(`<div class="card narrow empty">${icon('lock')}<h2>Account inactive</h2><p>Please contact the admin.</p></div>`, me.full_name);
+    const [, page, a, b] = location.hash.split('/'); // #/course/<id>  #/module/<courseId>/<moduleId>
+    const uuid = /^[0-9a-f-]{36}$/;
+    if (page === 'course' && uuid.test(a)) return await viewDashboard(a);
+    if (page === 'module' && uuid.test(a) && uuid.test(b)) return await viewModule(a, b);
+    return await viewDashboard();
+  } catch (e) { fail(e); }
+}
+
+// ---------- registration ----------
+
+async function viewRegister(email) {
+  const { data: courses, error } = await sb.from('courses').select('id,title,category,audience').eq('published', true).order('category').order('title');
+  if (error) return fail(error);
+  window._courses = courses;
+  show(`
+    <form class="card narrow" onsubmit="register(event)" novalidate>
+      <span class="eyebrow">${icon('cap', 'sm')} Registration</span>
+      <h1>One last step</h1>
+      <p class="muted">Tell us a little about yourself. You only need to do this once.</p>
+      <div class="field">
+        <span class="label">I am a <span class="req">*</span></span>
+        <div class="opt-grid" role="radiogroup">
+          <label class="opt"><input type="radio" name="type" value="candidate" checked onchange="fillCourses()">
+            <span class="opt-ico">${icon('briefcase')}</span><span><strong>Candidate</strong><span class="small">Applying for a job</span></span></label>
+          <label class="opt"><input type="radio" name="type" value="agent" onchange="fillCourses()">
+            <span class="opt-ico">${icon('handshake')}</span><span><strong>Agent</strong><span class="small">Want to partner with us</span></span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label for="r-name">Full name <span class="req">*</span></label>
+        <input id="r-name" type="text" required minlength="2" maxlength="80" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="r-phone">Mobile number <span class="req">*</span></label>
+        <input id="r-phone" type="tel" required pattern="[6-9][0-9]{9}" maxlength="10" inputmode="numeric" autocomplete="tel-national" placeholder="98XXXXXXXX">
+        <p class="help">10 digits, without +91</p>
+      </div>
+      <div class="field">
+        <label for="r-course">Position / Training <span class="req">*</span></label>
+        <select id="r-course" required></select>
+      </div>
+      <p id="r-err" class="form-error" role="alert"></p>
+      <button class="btn btn-primary btn-block" type="submit">Register ${icon('right')}</button>
+      <div class="notice info" style="margin-top:16px">${icon('briefcase')}
+        <span>Akshardham employee? You don't need to register. Ask the admin to add your Gmail
+        (<strong>${esc(email)}</strong>) to the LMS, then sign in with this account.</span></div>
+    </form>`);
+  fillCourses();
+}
+
+function fillCourses() {
+  const type = document.querySelector('input[name=type]:checked').value;
+  const list = window._courses.filter(c => c.audience === 'all' || c.audience === type);
+  document.getElementById('r-course').innerHTML = list.length
+    ? list.map(c => `<option value="${c.id}">${esc(c.category)} — ${esc(c.title)}</option>`).join('')
+    : `<option value="">No training available yet</option>`;
+}
+
+async function register(e) {
+  e.preventDefault();
+  const form = e.target, err = document.getElementById('r-err');
+  const bad = [...form.querySelectorAll('input, select')].find(el => !el.checkValidity());
+  if (bad) {
+    err.textContent = bad.id === 'r-phone' ? 'Enter a valid 10-digit mobile number (starting with 6–9).'
+      : bad.id === 'r-course' ? 'No training is open for registration yet. Please try again later.' : 'Please fill in all the details.';
+    return bad.focus();
+  }
+  const btn = e.submitter; btn.disabled = true; err.textContent = '';
+  const { error } = await sb.rpc('register', {
+    p_name: document.getElementById('r-name').value,
+    p_phone: document.getElementById('r-phone').value,
+    p_type: document.querySelector('input[name=type]:checked').value,
+    p_course: document.getElementById('r-course').value,
+  });
+  if (error) {
+    btn.disabled = false;
+    err.textContent = /phone/.test(error.message) ? 'This mobile number is already registered.' : error.message;
+    return;
+  }
+  justJoined = true;
+  render();
+}
+
+// ---------- learner views ----------
+
+function selectionSteps() {
+  const last = me.user_type === 'candidate'
+    ? ['Final interview', 'Clear every chapter and our team will call you']
+    : ['Get onboarded', 'Clear every chapter and our team will reach out'];
+  const steps = [['Watch the video', 'Each chapter, carefully'], ['Take the test', 'Score 80% to pass'], ['Retry if needed', 'With fresh questions each time'], last];
+  return `<section class="hero">
+    <span class="eyebrow">${icon('target', 'sm')} ${me.user_type === 'candidate' ? 'Selection process' : 'What happens next'}</span>
+    <ol class="steps">${steps.map(([t, s], i) => `<li><span class="n">${i + 1}</span><div><strong>${t}</strong><span>${s}</span></div></li>`).join('')}</ol>
+  </section>`;
+}
+
+const STATE = {
+  passed: ['check', 'b-ok', 'Completed'],
+  available: ['play', 'b-blue', 'Up next'],
+  locked: ['lock', '', 'Locked'],
+};
+let dash = { filter: 'all' }; // dashboard data + the chapter filter the learner picked
+
+// #/ and #/course/<id> both land here; <id> picks which training (topic) is open below
+async function viewDashboard(courseId) {
+  const { data, error } = await sb.from('enrollments').select('courses(id,title,category,description)');
+  if (error) throw error;
+  const courses = data.map(r => r.courses).filter(Boolean);
+  if (!courses.length) return show(`
+    <section class="hero"><span class="eyebrow">${icon('cap', 'sm')} Akshardham Academy</span>
+      <h1>Welcome, ${esc(firstName())}</h1><p>Your dashboard will fill up as soon as a training is assigned to you.</p></section>
+    <div class="card empty">${icon('book')}<h2>No training yet</h2><p>The admin will assign a training to you soon.</p></div>`, me.full_name);
+
+  const [mods, hist] = await Promise.all([
+    Promise.all(courses.map(c => sb.rpc('my_modules', { p_course: c.id }).then(r => { if (r.error) throw r.error; return r.data; }))),
+    sb.rpc('my_attempts'), // older databases may not have it yet: the history card just hides
+  ]);
+  courses.forEach((c, i) => { c.mods = mods[i]; });
+  const course = courses.find(c => c.id === courseId) || courses[0];
+  if (dash.course?.id !== course.id) dash.filter = 'all';
+  dash = { ...dash, courses, course, history: hist.error ? null : hist.data };
+
+  const all = courses.flatMap(c => c.mods);
+  const done = all.filter(m => m.state === 'passed').length;
+  const pct = all.length ? Math.round(100 * done / all.length) : 0;
+  const tests = all.reduce((s, m) => s + Number(m.attempt_count || 0), 0);
+  const tried = all.filter(m => m.attempt_count > 0);
+  const avgBest = tried.length ? Math.round(tried.reduce((s, m) => s + Number(m.best_pct), 0) / tried.length) : null;
+  // continue in the open training first, then any other
+  const nextCourse = [course, ...courses].find(c => c.mods.some(m => m.state === 'available'));
+  const next = nextCourse && nextCourse.mods.findIndex(m => m.state === 'available');
+  const cDone = course.mods.filter(m => m.state === 'passed').length;
+  const cPct = course.mods.length ? Math.round(100 * cDone / course.mods.length) : 0;
+  const finished = all.length && done === all.length;
+  const welcome = justJoined && course.mods.length;
+  justJoined = false;
+  const tile = (ic, cls, val, lbl, sub) => `<div class="stat"><span class="ico ${cls}">${icon(ic)}</span><div><div class="val">${val}</div><div class="lbl">${lbl}</div>${sub ? `<div class="sub">${sub}</div>` : ''}</div></div>`;
+
+  show(`
+    ${welcome ? `<section class="card welcome">
+      <span class="welcome-ico">${icon('award', 'lg')}</span>
+      <h1>Congratulations, ${esc(firstName())}!</h1>
+      <p>You're registered for <strong>${esc(course.title)}</strong>. Here's how it works:</p>
+      <ol>
+        <li>Watch each chapter's video carefully.</li>
+        <li>Take the short test. Score ${course.mods[0].pass_pct}% to pass.</li>
+        <li>Didn't pass? Rewatch and retry with fresh questions.</li>
+        <li>Clear all ${course.mods.length} chapters to finish.</li>
+      </ol>
+      <div class="row"><a class="btn btn-primary" href="#/module/${course.id}/${course.mods[0].id}">${icon('play', 'sm')} Start Chapter 1</a></div>
+    </section>` : ''}
+    ${me.status === 'shortlisted' && me.user_type !== 'employee' ? `<div class="notice ok">${icon('award')}<span><strong>You've been shortlisted!</strong> Our team will contact you for the next step.</span></div>` : ''}
+
+    <section class="hero dash-hero">
+      <div>
+        <span class="eyebrow">${icon('cap', 'sm')} My dashboard</span>
+        <h1>${finished ? 'Well done' : done ? 'Welcome back' : 'Welcome'}, ${esc(firstName())}</h1>
+        <p>${finished ? `You've completed every chapter.${me.user_type !== 'employee' ? ' Our team will contact you soon.' : ''}`
+          : `${done} of ${all.length} chapters complete across ${courses.length} training${courses.length > 1 ? 's' : ''}. Keep going!`}</p>
+        ${nextCourse ? `<a class="btn btn-gold" href="#/module/${nextCourse.id}/${nextCourse.mods[next].id}">${icon('play', 'sm')} ${done ? 'Continue' : 'Start'}: Chapter ${next + 1}${courses.length > 1 ? ` · ${esc(nextCourse.title)}` : ''}</a>` : ''}
+      </div>
+      <div class="ring" role="img" aria-label="${pct}% complete" style="background:conic-gradient(var(--gold) ${pct}%, rgba(255,255,255,.16) 0)"><div class="num">${pct}%</div></div>
+    </section>
+
+    <div class="stats stagger">
+      ${tile('check', 'ok', done, 'Chapters completed', `of ${all.length}`)}
+      ${tile('clock', 'gold', all.length - done, 'Chapters remaining', finished ? 'All done!' : '')}
+      ${tile('clipboard', '', tests, 'Tests taken', '')}
+      ${tile('target', 'ok', avgBest == null ? '—' : avgBest + '%', 'Average best score', tried.length ? `across ${tried.length} chapter${tried.length > 1 ? 's' : ''}` : 'No tests yet')}
+    </div>
+
+    <section class="card">
+      <div class="card-head"><h2>${icon('book')} My trainings</h2></div>
+      ${courses.length > 1 ? `<div class="seg" role="group" aria-label="Choose training" style="margin-bottom:16px">${courses.map(c => {
+        const d = c.mods.filter(m => m.state === 'passed').length;
+        return `<a href="#/course/${c.id}" class="${c === course ? 'on' : ''}" ${c === course ? 'aria-current="page"' : ''}>${esc(c.title)} <span class="sub">${d}/${c.mods.length}</span></a>`;
+      }).join('')}</div>` : ''}
+      <span class="badge b-gold">${esc(course.category)}</span>
+      <h3 style="margin:8px 0 4px">${esc(course.title)}</h3>
+      ${course.description ? `<p class="muted small">${esc(course.description)}</p>` : ''}
+      <div class="row" style="justify-content:space-between;margin:12px 0 8px"><strong>${cDone} of ${course.mods.length} chapters complete</strong><span class="num">${cPct}%</span></div>
+      <div class="bar" role="progressbar" aria-valuenow="${cPct}" aria-valuemin="0" aria-valuemax="100" aria-label="${esc(course.title)} progress"><i style="width:${cPct}%"></i></div>
+      ${course.mods.length ? `
+      <div class="toolbar" style="margin:20px 0 16px">
+        <div class="seg" role="group" aria-label="Filter chapters" id="ch-filter" style="flex:0 1 auto"></div>
+        <select aria-label="Jump to a chapter" onchange="if (this.value) location.hash = this.value">
+          <option value="">Jump to a chapter…</option>
+          ${course.mods.map((m, i) => `<option value="#/module/${course.id}/${m.id}" ${m.state === 'locked' ? 'disabled' : ''}>Chapter ${i + 1}: ${esc(m.title)}${m.state === 'locked' ? ' (locked)' : m.state === 'passed' ? ' ✓' : ''}</option>`).join('')}
+        </select>
+      </div>
+      <ol class="chapters" id="chapters"></ol>` : `<div class="empty">${icon('book')}<p>No chapters have been added to this training yet.</p></div>`}
+    </section>
+
+    ${course.mods.length ? `<div class="chart-grid">
+      <section class="card">
+        <div class="card-head"><h2>${icon('chart')} Scores by chapter</h2><span class="muted small">Your best score · line = pass mark</span></div>
+        <div class="funnel">${course.mods.map((m, i) => {
+          const best = m.attempt_count ? Math.round(m.best_pct) : null;
+          return `<div class="f-row" tabindex="0" data-tip="Chapter ${i + 1}: ${best == null ? 'not taken yet' : `best ${best}%, pass mark ${m.pass_pct}%`}">
+            <span class="f-lbl" title="${esc(m.title)}">Ch ${i + 1}</span>
+            <div class="f-track score-track"><i style="width:${best || 0}%"></i><b class="pass-mark" style="left:${m.pass_pct}%" aria-hidden="true"></b></div>
+            <span class="f-val num">${best == null ? '<span class="sub">—</span>' : `${best}%`} ${m.state === 'passed' ? icon('check', 'sm') : ''}</span>
+          </div>`;
+        }).join('')}</div>
+      </section>
+      ${dash.history ? historyCard() : ''}
+    </div>` : ''}
+
+    ${me.user_type !== 'employee' ? selectionSteps() : ''}`, me.full_name);
+  if (course.mods.length) drawChapters();
+  if (welcome) confetti();
+}
+
+function drawChapters() {
+  const { course, filter } = dash;
+  const keep = m => filter === 'all' || (filter === 'done') === (m.state === 'passed');
+  const count = f => course.mods.filter(m => f === 'all' || (f === 'done') === (m.state === 'passed')).length;
+  document.getElementById('ch-filter').innerHTML = [['all', 'All'], ['done', 'Completed'], ['pending', 'Pending']].map(([f, l]) =>
+    `<button class="${f === filter ? 'on' : ''}" aria-pressed="${f === filter}" onclick="dash.filter='${f}';drawChapters()">${l} <span class="sub">${count(f)}</span></button>`).join('');
+  const rows = course.mods.map((m, i) => [m, i]).filter(([m]) => keep(m));
+  document.getElementById('chapters').innerHTML = rows.map(([m, i]) => {
+    const [ic, cls, label] = STATE[m.state];
+    return `<li class="chapter ${m.state}">
+      <span class="node" aria-hidden="true">${m.state === 'locked' ? icon('lock', 'sm') : m.state === 'passed' ? icon('check') : `<b>${i + 1}</b>`}</span>
+      <div class="chapter-body">
+        <div style="min-width:0">
+          <div class="small muted">Chapter ${i + 1}</div>
+          <h3>${esc(m.title)}</h3>
+          <div class="chapter-meta">
+            ${m.attempt_count ? `<span>${icon('clipboard', 'sm')} ${m.attempt_count} attempt${m.attempt_count > 1 ? 's' : ''}</span><span>${icon('target', 'sm')} Best ${Math.round(m.best_pct)}%</span>` : ''}
+            ${m.state === 'locked' ? `<span>Unlocks after you pass the previous chapter</span>` : ''}
+          </div>
+        </div>
+        <div class="row">
+          <span class="badge ${cls}">${icon(ic)} ${label}</span>
+          ${m.state !== 'locked' ? `<a class="btn btn-sm ${m.state === 'available' ? 'btn-primary' : ''}" href="#/module/${course.id}/${m.id}">${m.state === 'passed' ? 'Review' : 'Start'} ${icon('right', 'sm')}</a>` : ''}
+        </div>
+      </div>
+    </li>`;
+  }).join('') || `<li class="empty">${icon(filter === 'done' ? 'clipboard' : 'award')}<p>${filter === 'done' ? 'No chapters completed yet. Your first one is waiting!' : 'Nothing pending. Great work!'}</p></li>`;
+}
+
+function historyCard() {
+  const { course, history } = dash;
+  const rows = history.filter(h => h.course_id === course.id);
+  const no = id => course.mods.findIndex(m => m.id === id) + 1;
+  return `<section class="card">
+    <div class="card-head"><h2>${icon('activity')} My test history</h2><span class="muted small">${rows.length} test${rows.length === 1 ? '' : 's'}</span></div>
+    ${rows.length ? `<ul class="feed">${rows.slice(0, 8).map(h => `<li>
+      <span class="badge ${h.passed ? 'b-ok' : 'b-err'}">${icon(h.passed ? 'check' : 'x')} ${h.passed ? 'Pass' : 'Fail'}</span>
+      <div style="flex:1;min-width:0"><strong>${no(h.module_id) ? `Ch ${no(h.module_id)}: ` : ''}${esc(h.chapter)}</strong>
+        <div class="sub">${new Date(h.submitted_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</div></div>
+      <span class="num"><strong>${Math.round(h.pct)}%</strong> <span class="sub">${h.score}/${h.total}</span></span>
+    </li>`).join('')}</ul>` : `<div class="empty">${icon('clipboard')}<p>No tests yet. Watch Chapter 1 and take your first test.</p></div>`}
+  </section>`;
+}
+
+async function viewModule(courseId, moduleId) {
+  const { data: mods, error } = await sb.rpc('my_modules', { p_course: courseId });
+  if (error) throw error;
+  const idx = mods.findIndex(x => x.id === moduleId), m = mods[idx];
+  if (!m || m.state === 'locked') return show(`<div class="card narrow empty">${icon('lock')}<h2>Chapter locked</h2><p>Pass the previous chapter's test first.</p><a class="btn" href="#/course/${courseId}">${icon('left')} All chapters</a></div>`, me.full_name);
+  const videos = (m.videos || '').split(/\s+/).filter(Boolean).map(url => {
+    const id = ytId(url);
+    return id
+      ? `<div class="video" style="display:grid;place-items:center;background:#14243A;color:#fff;text-align:center;padding:16px"><div><div style="font-size:42px;line-height:1">&#9654;</div><div style="font-weight:600;margin-top:8px">Training video</div><div style="opacity:.75;font-size:13px">In the real app a YouTube video plays here</div></div></div>`
+      : `<p><a class="btn" href="${esc(url)}" target="_blank" rel="noopener">${icon('external')} Open video</a></p>`;
+  }).join('');
+  show(`
+    <a class="crumb" href="#/course/${courseId}">${icon('left', 'sm')} All chapters</a>
+    <section class="card">
+      <span class="eyebrow">${icon('video', 'sm')} Chapter ${idx + 1} of ${mods.length}</span>
+      <h1>${esc(m.title)}</h1>
+      ${m.description ? `<p class="muted">${esc(m.description)}</p>` : ''}
+      ${videos || `<div class="empty">${icon('video')}<p>This chapter has no video.</p></div>`}
+      <p class="help">Video not playing? Let the admin know. Your progress is saved.</p>
+    </section>
+    <section class="card" id="test">
+      <div class="card-head"><h2>${icon('clipboard')} Chapter test</h2>${m.state === 'passed' ? `<span class="badge b-ok">${icon('check')} Passed</span>` : ''}</div>
+      <div class="chips">
+        <span class="badge b-blue">${icon('target')} Pass mark: ${m.pass_pct}%</span>
+        <span class="badge">${icon('retry')} New questions every attempt</span>
+        ${m.attempt_count ? `<span class="badge">${icon('award')} Best: ${Math.round(m.best_pct)}%</span>` : ''}
+      </div>
+      <label class="check" style="margin-bottom:16px"><input type="checkbox" onchange="document.getElementById('start').disabled = !this.checked"> I have watched the full video</label>
+      <button class="btn btn-primary" id="start" disabled onclick="startTest('${courseId}','${moduleId}')">${icon('play', 'sm')} Start test</button>
+    </section>`, me.full_name);
+}
+
+async function startTest(courseId, moduleId) {
+  const box = document.getElementById('test');
+  box.innerHTML = `<div class="sk" style="height:56px;margin-bottom:12px"></div><div class="sk" style="height:220px"></div>`;
+  const { data, error } = await sb.rpc('start_attempt', { p_module: moduleId });
+  if (error) { box.innerHTML = `<div class="notice">${icon('alert')}<span>${esc(friendly(error.message))}</span></div>`; return; }
+  const n = data.questions.length;
+  box.innerHTML = `
+    <div class="quiz-head">
+      <div class="row"><span>${icon('clipboard', 'sm')} Test</span><span class="num"><span id="ans">0</span> / ${n} answered</span></div>
+      <div class="bar"><i id="ans-bar" style="width:0"></i></div>
+    </div>
+    <form onsubmit="submitTest(event,'${data.attempt_id}','${courseId}','${moduleId}')" onchange="countAnswers(this, ${n})">
+      ${data.questions.map((q, i) => `
+        <fieldset class="q">
+          <legend><span class="qn">${i + 1}</span><span>${esc(q.text)}</span></legend>
+          ${q.options.map((o, j) => `<label class="opt"><input type="radio" name="${q.id}" value="${j}" ${j === 0 ? 'required' : ''}> ${esc(o)}</label>`).join('')}
+        </fieldset>`).join('')}
+      <button class="btn btn-primary btn-block" type="submit">${icon('check', 'sm')} Submit</button>
+    </form>`;
+  box.scrollIntoView({ behavior: 'smooth' });
+}
+
+function countAnswers(form, n) {
+  const k = new Set([...new FormData(form)].map(([q]) => q)).size;
+  document.getElementById('ans').textContent = k;
+  document.getElementById('ans-bar').style.width = `${100 * k / n}%`;
+}
+
+async function submitTest(e, attemptId, courseId, moduleId) {
+  e.preventDefault();
+  const btn = e.submitter; btn.disabled = true; btn.textContent = 'Checking…';
+  const answers = Object.fromEntries([...new FormData(e.target)].map(([k, v]) => [k, Number(v)]));
+  const { data: r, error } = await sb.rpc('submit_attempt', { p_attempt: attemptId, p_answers: answers });
+  const box = document.getElementById('test');
+  if (error) { box.innerHTML = `<div class="notice">${icon('alert')}<span>${esc(error.message)}</span></div>`; return; }
+  let finished = false;
+  if (r.passed) {
+    const { data: mods } = await sb.rpc('my_modules', { p_course: courseId });
+    finished = !!mods?.length && mods.every(m => m.state === 'passed');
+  }
+  const color = r.passed ? 'var(--ok)' : 'var(--err)';
+  box.innerHTML = `
+    <div class="result fade-in">
+      <div class="ring" style="background:conic-gradient(${color} ${r.pct}%, #E7ECF3 0)"><div class="num">${Math.round(r.pct)}%</div></div>
+      <h2>${finished ? 'Training complete!' : r.passed ? 'Well done, you passed!' : "You didn't pass this time"}</h2>
+      <p class="muted"><span class="badge ${r.passed ? 'b-ok' : 'b-err'}">${icon(r.passed ? 'check' : 'x')} ${r.passed ? 'PASS' : 'FAIL'}</span>
+        &nbsp;${r.score} / ${r.total} correct · Pass mark ${r.pass_pct}%</p>
+      ${finished
+        ? `<p>Congratulations! You've cleared every chapter.${me.user_type !== 'employee' ? ' Our team will contact you soon for the next step.' : ''}</p><div class="row"><a class="btn btn-primary" href="#/course/${courseId}">${icon('award', 'sm')} View my progress</a></div>`
+        : r.passed
+        ? `<p>The next chapter is now unlocked.</p><div class="row"><a class="btn btn-primary" href="#/course/${courseId}">Continue ${icon('right', 'sm')}</a></div>`
+        : `<p>No worries. Watch the video again, then retake the test. You'll get new questions next time.</p>
+           <div class="row">
+             <button class="btn" onclick="scrollTo({top:0,behavior:'smooth'})">${icon('video', 'sm')} Rewatch video</button>
+             <button class="btn btn-primary" onclick="startTest('${courseId}','${moduleId}')">${icon('retry', 'sm')} Retake test</button>
+           </div>`}
+    </div>`;
+  box.scrollIntoView({ behavior: 'smooth' });
+  if (r.passed) confetti();
+}
+
+if (typeof module === 'object') module.exports = { ytId }; // node test.js
+else { addEventListener('hashchange', render); initTips(); render(); }
+
+</script>
+<div style="position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:9999;background:#111827;color:#fff;font:600 12px/1 system-ui,sans-serif;padding:7px 12px;border-radius:999px;opacity:.88;pointer-events:none;white-space:nowrap">Demo · sample data · nothing is saved</div>
+</body>
+</html>
